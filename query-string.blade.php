@@ -1,18 +1,18 @@
-* [Introduction](#introduction)
-    * [Keeping A Clean Query String](#clean-query-string)
-    * [Query String Aliases](#query-string-aliases)
+* [簡介](#introduction)
+    * [保持乾淨的查詢字串](#clean-query-string)
+    * [查詢字串別名](#query-string-aliases)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Sometimes it's useful to update the browser's query string when your component state changes.
+有時候在元件狀態改變時更新瀏覽器的查詢字串是很有用的。
 
-For example, if you were building a "search posts" component, and wanted the query string to reflect the current search value like so:
+例如，如果您正在建立一個"搜索文章"的元件，並希望查詢字串反映當前的搜索值，如下所示：
 
 `https://your-app.com/search-posts?search=some-search-string`
 
-This way, when a user hits the back button, or bookmarks the page, you can get the initial state out of the query string, rather than resetting the component every time.
+這樣，當用戶點擊返回按鈕或將頁面加入書籤時，您可以從查詢字串中獲取初始狀態，而不是每次重置元件。
 
-In these cases, you can add a property's name to `protected $queryString`, and Livewire will update the query string every time the property value changes, and also update the property when the query string changes.
+在這些情況下，您可以將屬性名稱添加到`protected $queryString`，Livewire將在屬性值更改時更新查詢字串，並在查詢字串更改時也更新屬性。
 
 @component('components.code-component')
 @slot('class')
@@ -47,17 +47,17 @@ class SearchPosts extends Component
 @endslot
 @endcomponent
 
-### Keeping A Clean Query String {#clean-query-string}
+### 保持乾淨的查詢字串 {#clean-query-string}
 
-In the case above, when the search property is empty, the query string will look like this:
+在上面的情況下，當搜索屬性為空時，查詢字串將如下所示：
 
 `?search=`
 
-There are other cases where you might want to only represent a value in the query string if it is NOT the default setting.
+還有其他情況，您可能只想在查詢字串中表示一個值，如果它不是默認設置。
 
-For example, if you have a `$page` property to track pagination in a component, you may want to remove the `page` property from the query string when the user is on the first page.
+例如，如果您有一個`$page`屬性來跟踪元件中的分頁，您可能希望當用戶在第一頁時從查詢字串中刪除`page`屬性。
 
-In cases like these, you can use the following syntax:
+在這些情況下，您可以使用以下語法：
 
 @component('components.code-component')
 @slot('class')
@@ -67,6 +67,7 @@ class SearchPosts extends Component
     public $search = '';
     public $page = 1;
 
+```php
     protected $queryString = [
         'foo',
         'search' => ['except' => ''],
@@ -78,11 +79,11 @@ class SearchPosts extends Component
 @endslot
 @endcomponent
 
-### Query String Aliases {#query-string-aliases}
+### 查詢字串別名 {#query-string-aliases}
 
-Additionally, if you want to modify how properties are represented in the URL, Livewire offers a simple syntax for aliasing query strings.
+此外，如果您想修改屬性在 URL 中的表示方式，Livewire 提供了一個簡單的語法來為查詢字串設定別名。
 
-For example, if you want to shorten the URL, where the page property is represented as `p` and search as `s`, you can use the `as` modifier to achieve that outcome.
+例如，如果您想要縮短 URL，將 page 屬性表示為 `p`，search 表示為 `s`，您可以使用 `as` 修飾符來達到這個效果。
 
 @component('components.code-component')
 @slot('class')
@@ -101,6 +102,7 @@ class SearchPosts extends Component
 @endslot
 @endcomponent
 
-Now the URL can look like this:
+現在 URL 可以看起來像這樣：
 
 `?s=Livewire%20is%20awesome&p=2`
+```

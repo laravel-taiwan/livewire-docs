@@ -1,47 +1,47 @@
-* [Toggling elements](#toggling-elements)
-* [Toggling classes](#toggling-classes)
-* [Toggling attributes](#toggling-attributes)
+* [切換元素](#toggling-elements)
+* [切換類別](#toggling-classes)
+* [切換屬性](#toggling-attributes)
 
-It's sometimes important to notify a user if they have lost their internet connection. Livewire provides helpful utilities to perform actions based on a user's "offline" state.
+有時候通知使用者失去網路連線是很重要的。Livewire 提供了有用的工具，可以根據使用者的「離線」狀態執行動作。
 
-## Toggling elements {#toggling-elements}
+## 切換元素 {#toggling-elements}
 
-You can show an element on the page when the user goes "offline", by adding the `wire:offline` attribute.
+您可以通過添加 `wire:offline` 屬性，在使用者「離線」時在頁面上顯示一個元素。
 
 @component('components.code')
 <div wire:offline>
-    You are now offline.
+    您現在已離線。
 </div>
 @endcomponent
 
-This `<div>` will automatically be hidden by default, and shown to the user when the browser goes offline.
+這個 `<div>` 預設會自動隱藏，並在瀏覽器離線時顯示給使用者。
 
-## Toggling classes {#toggling-classes}
+## 切換類別 {#toggling-classes}
 
-Adding the `class` modifier allows you to add a class to an element when "offline".
+添加 `class` 修飾符允許您在「離線」時向元素添加一個類別。
 
 @component('components.code', ['lang' => 'blade'])
 <div wire:offline.class="bg-red-300"></div>
 @endcomponent
 
-Now, when the browser goes offline, the element will receive the `bg-red-300` class. The class will be removed again once the user is back online.
+現在，當瀏覽器離線時，該元素將收到 `bg-red-300` 類別。一旦使用者恢復在線，該類別將被移除。
 
-You can also perform the inverse, and remove classes by adding the `.remove` modifier, similar to how `wire:loading` works.
+您也可以執行相反操作，通過添加 `.remove` 修飾符來移除類別，類似於 `wire:loading` 的作用方式。
 
 @component('components.code', ['lang' => 'blade'])
 <div wire:offline.class.remove="bg-green-300" class="bg-green-300"></div>
 @endcomponent
 
-The `bg-green-300` class will be removed from the `<div>` while offline.
+當離線時，`bg-green-300` 類別將從 `<div>` 中移除。
 
-## Toggling attributes {#toggling-attributes}
+## 切換屬性 {#toggling-attributes}
 
-Adding the `attr` modifier allows you to add an attribute to an element when "offline".
+添加 `attr` 修飾符允許您在「離線」時向元素添加一個屬性。
 
 @component('components.code', ['lang' => 'blade'])
-<button wire:offline.attr="disabled">Submit</button>
+<button wire:offline.attr="disabled">提交</button>
 @endcomponent
 
-Now, when the browser goes offline, the button will be disabled.
+現在，當瀏覽器離線時，按鈕將被禁用。
 
-You can also perform the inverse, and remove attributes by adding the `.remove` modifier.
+您也可以執行相反操作，通過添加 `.remove` 修飾符來移除屬性。

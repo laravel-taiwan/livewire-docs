@@ -1,10 +1,10 @@
-* [Registering Custom Components](#registering-components)
+* [註冊自訂元件](#registering-components)
 
-## Registering Custom Components {#registering-components}
+## 註冊自訂元件 {#registering-components}
 
-You may manually register components using the `Livewire::component` method.
-This can be useful if you want to provide Livewire components from a composer package.
-Typically this should be done in the `boot` method of a service provider.
+您可以使用 `Livewire::component` 方法手動註冊元件。
+如果您想要從一個 composer 套件提供 Livewire 元件，這將會很有用。
+通常應該在服務提供者的 `boot` 方法中執行此操作。
 
 @component('components.code', ['lang' => 'php'])
 class YourPackageServiceProvider extends ServiceProvider {
@@ -14,7 +14,7 @@ class YourPackageServiceProvider extends ServiceProvider {
 }
 @endcomponent
 
-Now, applications with your package installed can consume your component in their views like so:
+現在，安裝了您的套件的應用程式可以在其視圖中像這樣使用您的元件：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim

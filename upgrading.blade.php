@@ -1,79 +1,79 @@
-* [V2 is Here! 🎉](#v2-is-here)
-* [Update Your Composer Version](#update-your-composer-version)
-* [Update Your Alpine Version](#update-your-alpine-verion)
-* [Update Your Application Code](#update-your-application-code)
-    * [Updated: `$updatesQueryString` to `$queryString`](#query-string)
-    * [Removed: Route::livewire()](#route-livewire)
-* [Removed: Turbolinks Support](#turbolinks)
-* [Changed: `assertSet()`](#assert-set)
-* [Removed: Property Casters](#casters)
-* [Updated: Pagination Views](#pagination)
-* [Updated: JavaScript Hooks](#hooks)
-* [Updated: VueJS Support](#vuejs)
-* [Signing Off](#signing-off)
+* [V2 正式推出！🎉](#v2-is-here)
+* [更新您的 Composer 版本](#update-your-composer-version)
+* [更新您的 Alpine 版本](#update-your-alpine-verion)
+* [更新您的應用程式代碼](#update-your-application-code)
+    * [已更新：將 `$updatesQueryString` 改為 `$queryString`](#query-string)
+    * [已移除：Route::livewire()](#route-livewire)
+* [已移除：Turbolinks 支援](#turbolinks)
+* [已更改：`assertSet()`](#assert-set)
+* [已移除：屬性轉換器](#casters)
+* [已更新：分頁檢視](#pagination)
+* [已更新：JavaScript 鉤子](#hooks)
+* [已更新：VueJS 支援](#vuejs)
+* [簽出](#signing-off)
 
-## V2 is Here! 🎉 {#v2-is-here}
+## V2 正式推出！🎉 {#v2-is-here}
 
-Before we get into the technical upgrade stuff, you might be interested in what philosophical underpinnings are behind these changes.
+在我們深入技術升級的內容之前，您可能會對這些變更背後的哲學基礎感興趣。
 
-* **Livewire is declarative.** Rather than providing an endless set of utilities for interacting with the front-end. Livewire aims to make front-end interactions a "side-effect" of your state (i.e. component properties). For example, with the new `$queryString` API, rather than providing methods to manually update the browser's query string from the backend, you declare which component properties you want to be reflected in the front-end's query string with the `$queryString` property.
-* **Livewire is anti-boilerplate.** By allowing developers to set eloquent models as properties and `wire:model` (bind) to them directly, we're able to cut out SO much boilerplate code. To further kill the boilerplate, in V2, component parameters are now automatically assigned to public properties by matching their name. Now, `mount()` methods are only used for things they MUST be used for, not for simply forwarding parameters to properties. Kill the noise.
-* **Livewire is a back-end interface at its core**. The `wire:click` stuff is just sugar that makes the interface easy to use. With the addition of `$wire`, the underlying power is now apparent: Livewire allows you to interface with backend code, directly and declaratively without the need for imperative/boilerplatey patterns like axios.post(), RESTfull endpoints, controllers, etc...
-* **Livewire is simple to use**. Of all the philosophies I hold, I hold this one the strongest. Livewire should always remain ridiculously easy to use. My goal is that you can easily remember and almost guess its APIs. Before introducing any feature, I scour existing patterns and APIs in Laravel to see if Livewire can use that shared knowledge as leverage for new adopters. A small example is the new `$rules` property. I could have named it anything, but why would I name it anything besides `$rules` (a precedent set by Request objects in Laravel)? If I don't think an API is easy, intuitive, and clear, I wait on the feature and let it simmer until something clear and beautiful emerges. (Or at least that's my goal.)
+* **Livewire 是聲明式的。** Livewire 不是提供無盡的前端交互工具，而是旨在使前端交互成為您狀態（即組件屬性）的“副作用”。例如，使用新的 `$queryString` API，您不需要提供手動從後端更新瀏覽器查詢字串的方法，而是使用 `$queryString` 屬性聲明您希望在前端查詢字串中反映的組件屬性。
+* **Livewire 反對樣板代碼。** 通過允許開發人員將 Eloquent 模型設置為屬性並直接將 `wire:model`（綁定）到它們，我們能夠刪除大量樣板代碼。為了進一步減少樣板代碼，在 V2 中，組件參數現在通過匹配其名稱自動分配給公共屬性。現在，`mount()` 方法僅用於必須使用的事項，而不僅僅是將參數轉發給屬性。消除噪音。
+* **Livewire 本質上是一個後端接口**。 `wire:click` 等內容只是使界面易於使用的糖。隨著 `$wire` 的添加，底層功能現在變得明顯：Livewire 允許您直接且聲明性地與後端代碼進行交互，無需使用像 axios.post()、RESTful 端點、控制器等命令式/樣板化模式...
+* **Livewire 使用起來簡單**。 在我所持有的所有理念中，這是我最堅定的。Livewire 應始終保持極其易於使用。我的目標是您可以輕鬆記住並幾乎猜測其 API。在引入任何功能之前，我會仔細查看 Laravel 中現有的模式和 API，看看 Livewire 是否可以利用這些共享知識作為新採用者的槓桿。一個小例子是新的 `$rules` 屬性。我可以給它取任何名字，但為什麼我不將其命名為除了 `$rules` 之外的任何名字（這是 Laravel 中 Request 物件設定的先例）？如果我認為一個 API 不易用、直觀和清晰，我會等待該功能，讓它慢慢浸漬，直到出現清晰且美麗的東西。（或者至少這是我的目標。）
 
-## Update Your Composer Version {#update-your-composer-version}
+## 更新您的 Composer 版本 {#update-your-composer-version}
 
-1. Update the `livewire/livewire` dependency in your `composer.json` file to `^2.0`
-2. Run `composer update livewire/livewire`
-3. Run `php artisan view:clear`
-4. Run `php artisan livewire:publish --assets` (If you published the assets before)
+1. 將您的 `composer.json` 檔案中的 `livewire/livewire` 依賴更新為 `^2.0`
+2. 執行 `composer update livewire/livewire`
+3. 執行 `php artisan view:clear`
+4. 執行 `php artisan livewire:publish --assets`（如果您之前已發佈過資源）
 
-## Update Your Alpine Version {#update-your-alpine-verion}
+## 更新您的 Alpine 版本 {#update-your-alpine-verion}
 
-If you are using [AlpineJS](https://github.com/alpinejs/alpine) with Livewire V2, make sure you are on version `2.7.0` or greater.
+如果您正在使用 [AlpineJS](https://github.com/alpinejs/alpine) 與 Livewire V2，請確保您的版本為 `2.7.0` 或更高。
 
-**For example:**
+**例如：**
 @component('components.code', ['lang' => 'blade'])
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.x/dist/alpine.min.js" defer></script>
 @endcomponent
 
-## Update Your Application Code {#update-your-application-code}
+## 更新您的應用程式代碼 {#update-your-application-code}
 
-Here are the breaking changes and their upgrade instructions in order of impact:
+以下是破壞性更改及其升級說明，按影響程度排序：
 
-1. [Updated: `$updatesQueryString` to `$queryString`](#query-string)
-1. [Removed: Route::livewire()](#route-livewire)
-1. [Removed: Turbolinks Support](#turbolinks)
-1. [Changed: `assertSet()`](#assert-set)
-1. [Removed: Property Casters](#casters)
-1. [Updated: Pagination Views](#pagination)
-1. [Updated: JavaScript Hooks](#hooks)
-1. [Updated: VueJs Support](#vuejs)
+1. [已更新：`$updatesQueryString` 至 `$queryString`](#query-string)
+1. [已移除：Route::livewire()](#route-livewire)
+1. [已移除：Turbolinks 支援](#turbolinks)
+1. [已更改：`assertSet()`](#assert-set)
+1. [已移除：屬性轉換器](#casters)
+1. [已更新：分頁視圖](#pagination)
+1. [已更新：JavaScript 鉤子](#hooks)
+1. [已更新：VueJs 支援](#vuejs)
 
-### Updated: `$updatesQueryString` to `$queryString` {#query-string}
-Livewire 1.x had a more primitive utility for manipulating the browser's query string based on property values. In V2, there is a much more advanced utility for manipulating the query string.
+### 已更新：`$updatesQueryString` 至 `$queryString` {#query-string}
+Livewire 1.x 具有一個更基本的實用工具，用於根據屬性值操作瀏覽器的查詢字串。在 V2 中，有一個更先進的工具，用於操作查詢字串。
 
-The first breaking change is `$updatesQueryString` has been changed to `$queryString`:
+第一個破壞性更改是將 `$updatesQueryString` 更改為 `$queryString`：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
 class Search extends Component
 {
-    // Before
+    // 之前
     protected $updatesQueryString = ['search']
 
-    // After
+    // 現在
     protected $queryString = ['search']
 }
 @endverbatim
 @endcomponent
 
-Aside from a new property name, there are 2 significant changes to the inner workings:
+除了新的屬性名稱外，內部運作有兩個重大變化：
 
-1. Property values are now automatically set to initial values from the query string on page load
-1. The query string system now uses the browser's `history.pushState` API instead of `history.replaceState` (which means you can now click the back button in a browser to revisit old query string changes)
+1. 現在屬性值在頁面加載時會自動設置為查詢字串中的初始值
+1. 查詢字串系統現在使用瀏覽器的 `history.pushState` API 而不是 `history.replaceState`（這意味著您現在可以點擊瀏覽器的返回按鈕以重新訪問舊的查詢字串更改）
 
-Because the query string system now automatically sets initial values, there is no need for doing that in the `mount()` method anymore:
+因為查詢字串系統現在會自動設置初始值，所以在 `mount()` 方法中不再需要這樣做：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -83,56 +83,52 @@ class Search extends Component
 
     public function mount()
     {
-        // No need for code like this anymore.
-        // The search property will now be automatically set.
+        // 不再需要像這樣的程式碼。
+        // 現在將自動設置搜尋屬性。
         $this->search = request()->query('search', '');
     }
 }
 @endverbatim
 @endcomponent
 
-### Removed: Route::livewire() {#route-livewire}
-Livewire 1.x allowed you to register a component with a route for the entire page using the `Route::livewire()` method. Livewire 2.0 now allows you to pass Livewire components directly into routes using the standard `Route::get()` method and the fully qualified namespace.
+### 移除：Route::livewire() {#route-livewire}
+Livewire 1.x 允許您使用 `Route::livewire()` 方法在整個頁面的路由中註冊一個組件。Livewire 2.0 現在允許您直接將 Livewire 組件傳遞到路由中，使用標準的 `Route::get()` 方法和完全合格的命名空間。
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
-// Before
+// 之前
 Route::livewire('/post', 'show-posts');
 
-// After
+// 現在
 Route::get('/post', \App\Http\Livewire\ShowPosts::class);
 @endverbatim
 @endcomponent
 
-The first thing to note is that if you are using Laravel 7, you will need to remove the `namespace(...)` line from `app/Providers/RouteServiceProvider.php`:
+首先要注意的是，如果您使用的是 Laravel 7，您需要從 `app/Providers/RouteServiceProvider.php` 中刪除 `namespace(...)` 行：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
 protected function mapWebRoutes()
 {
     Route::middleware('web')
-        ->namespace($this->namespace) // Remove me
+        ->namespace($this->namespace) // 刪除我
         ->group(base_path('routes/web.php'));
 }
 @endverbatim
 @endcomponent
 
-This is done by default in Laravel 8, but if you are on Laravel 7, you will need to remove this to be able to pass a Livewire class into `Route::get()`. Otherwise, Laravel will prepend a namespace to ALL classes passed into `Route::get()`.
+這在 Laravel 8 中是默認的，但如果您使用的是 Laravel 7，您需要刪除這個才能將 Livewire 類傳遞給 `Route::get()`。否則，Laravel 將在傳遞給 `Route::get()` 的所有類前面加上一個命名空間。
 
-By default in 1.x, Livewire renders your page-level components using a traditional Blade layout located in `resources/layouts/app.blade.php`. In 2.0, Livewire uses the same layout file as a default, however, it now expects you are using the new Blade component `$slot` syntax in the layout. For example:
+在 1.x 中，Livewire 默認使用位於 `resources/layouts/app.blade.php` 中的傳統 Blade 佈局來呈現您的頁面級組件。在 2.0 中，Livewire 使用相同的佈局文件作為默認，但現在預期您在佈局中使用新的 Blade 組件 `$slot` 語法。例如：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
-<!-- Before -->
+<!-- 之前 -->
 <html>
     <body>
         @yield('content')
 
-        @livewireScripts
-    </body>
-</html>
-
-<!-- After -->
+```html
 <html>
     <body>
         {{ $slot }}
@@ -143,16 +139,16 @@ By default in 1.x, Livewire renders your page-level components using a tradition
 @endverbatim
 @endcomponent
 
-If you manually configured a layout for the route in your routes file, the `->layout()` method has now been moved to a new method called `->extends()` and placed in the render function.
+如果您在路由文件中手動配置了路由的佈局，`->layout()` 方法現在已移至一個名為 `->extends()` 的新方法中，並放置在 render 函數中。
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
-// Before
+// 之前
 Route::livewire('/post', ShowPosts::class)
     ->layout('layouts.base')
     ->section('body');
 
-// After
+// 之後
 class ShowPosts extends Component
 {
     public function render()
@@ -165,7 +161,7 @@ class ShowPosts extends Component
 @endverbatim
 @endcomponent
 
-If you wish to update your manually configured layouts to the new `$slot` syntax, you can specify them using the new `->layout()` method. This method will use the `$slot` by default, but you can also configure the component to render into a named slot using the `->slot()` method:
+如果您希望將手動配置的佈局更新為新的 `$slot` 語法，您可以使用新的 `->layout()` 方法指定它們。此方法將默認使用 `$slot`，但您也可以使用 `->slot()` 方法配置組件以呈現到具名插槽：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -181,10 +177,10 @@ class ShowPosts extends Component
 @endverbatim
 @endcomponent
 
-## Removed: Turbolinks Support {#turbolinks}
-Livewire no longer supports Turbolinks out of the box.
+## 已移除：Turbolinks 支援 {#turbolinks}
+Livewire 不再直接支持 Turbolinks。
 
-If you want to continue using Turbolinks in your Livewire application, you will have to include the [Turbolinks adapter](https://github.com/livewire/turbolinks) alongside Livewire's JavaScript assets:
+如果您希望在 Livewire 應用中繼續使用 Turbolinks，您將需要在 Livewire 的 JavaScript 資源旁邊包含 [Turbolinks adapter](https://github.com/livewire/turbolinks)：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -195,27 +191,28 @@ If you want to continue using Turbolinks in your Livewire application, you will 
 @endverbatim
 @endcomponent
 
-As this adapter is new, you may run into issues related Turbolinks functionality, if that is the case, please submit an issue on the [adapter's repository](https://github.com/livewire/turbolinks).
+由於這個適配器是新的，如果遇到與 Turbolinks 功能相關的問題，請在 [適配器的存儲庫](https://github.com/livewire/turbolinks) 上提交問題。
+```
 
-## Changed: `assertSet()` {#assert-set}
+## 已更改：`assertSet()` {#assert-set}
 
-In Livewire V1, the testing method `assertSet('property', 'value')` tested against data in the JavaScript-safe Livewire payload, rather than asserting against the value of a property on the actual Livewire component's PHP instance. This made it impossible to test computed properties from `assertSet()`.
+在 Livewire V1 中，測試方法 `assertSet('property', 'value')` 是針對 JavaScript 安全的 Livewire 載荷中的數據進行測試，而不是針對實際 Livewire 組件的 PHP 實例上屬性的值進行斷言。這使得無法從 `assertSet()` 中測試計算屬性。
 
-In V2, `assertSet()` now behaves how you would expect: making assertions on data in the actual PHP instance, and if you want to assert against payload data, you can now use the new `assertPayloadSet()`.
+在 V2 中，`assertSet()` 現在的行為符合您的預期：對實際 PHP 實例中的數據進行斷言，如果您想對載荷數據進行斷言，現在可以使用新的 `assertPayloadSet()`。
 
-For most people, this won't change a thing. However, if during your upgrade you are getting failures in your test suite around an `assertSet()`, you should either refactor your test or use `assertPayloadSet()`.
+對於大多數人來說，這不會有任何變化。但是，如果在升級過程中您的測試套件中出現了關於 `assertSet()` 的失敗，您應該重新設計您的測試，或者使用 `assertPayloadSet()`。
 
-## Removed: Property Casters {#casters}
-Property casters have been removed in Livewire V2. There are three reasons for this decision:
+## 已移除：屬性轉換器 {#casters}
+在 Livewire V2 中已刪除屬性轉換器。這個決定有三個原因：
 
-1. People mostly used these for properties that are instances of `Collection` and `DateTime`. These are now automatically cast out of the box
-1. Not many users use (or are even aware) of this feature to begin with
-1. There are other ways to accomplish this exact same functionality
+1. 大多數人主要用於 `Collection` 和 `DateTime` 類型的屬性。這些現在已經自動轉換
+1. 沒有多少用戶使用（甚至知道）這個功能
+1. 有其他方法可以實現完全相同的功能
 
-Here are a few examples:
+以下是一些示例：
 @component('components.code', ['lang' => 'php'])
 @verbatim
-// Before
+// 之前
 public $foo;
 
 protected $casts = ['foo' => 'collection'];
@@ -225,8 +222,8 @@ public function mount()
     $this->foo = collect(['foo', 'bar']);
 }
 
-// After
-// (Collections are automatically cast now)
+// 現在
+// (現在自動轉換集合)
 public $foo;
 
 public function mount()
@@ -238,7 +235,7 @@ public function mount()
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
-// Before
+// 之前
 class AllCaps implements Castable {
     public function cast($value)
     {
@@ -260,7 +257,7 @@ class SomeComponent extends Component
     ....
 }
 
-// After
+// 現在
 class SomeComponent extends Component
 {
     public $foo;
@@ -270,6 +267,7 @@ class SomeComponent extends Component
         $this->foo = strtoupper($value);
     }
 
+```php
     public function dehydrateFoo($value)
     {
         $this->foo = strtolower($value);
@@ -277,16 +275,14 @@ class SomeComponent extends Component
 
     ....
 }
-@endverbatim
-@endcomponent
+```
 
-## Updated: Pagination Views {#pagination}
-If you've paginated results by adding `WithPagination` to a component and relied upon the default Livewire pagination links view using `$posts->links()`, the views will have been updated from Bootstrap-4 to Tailwind.
+## 更新：分頁視圖 {#pagination}
+如果您已經將結果分頁並將 `WithPagination` 添加到組件中，並依賴於使用 `$posts->links()` 顯示默認的 Livewire 分頁連結視圖，則視圖已從 Bootstrap-4 更新為 Tailwind。
 
-Livewire V2 still supports Bootstrap-4 pagination, however, you have to configure it using the `$paginationTheme` property on your component:
+Livewire V2 仍然支持 Bootstrap-4 分頁，但您必須在組件上使用 `$paginationTheme` 屬性進行配置：
 
-@component('components.code', ['lang' => 'php'])
-@verbatim
+```php
 class ShowPosts extends Component
 {
     use WithPagination;
@@ -295,32 +291,28 @@ class ShowPosts extends Component
 
     ...
 }
-@endverbatim
-@endcomponent
+```
 
-Even though V2 still supports Bootstrap-4, the pagination view has been updated to match Laravel 8. Therefore, it will differ slightly from the view previously used in V1. To use the exact view from V1:
+即使 V2 仍然支持 Bootstrap-4，分頁視圖已更新以匹配 Laravel 8。因此，它與 V1 中先前使用的視圖略有不同。要使用從 V1 中精確的視圖：
 
-1. Copy the view source [from GitHub](https://raw.githubusercontent.com/livewire/livewire/1.x/src/views/pagination-links.blade.php)
-2. Paste it into a new blade file anywhere you see fit. For example, we'll say: `resources/views/pagination-links.blade.php`
-3. Now reference it in your Blade view by passing it into the `->links()` method:
+1. 從 GitHub 複製視圖源碼 [from GitHub](https://raw.githubusercontent.com/livewire/livewire/1.x/src/views/pagination-links.blade.php)
+2. 將其粘貼到任何您認為合適的新 blade 文件中。例如，我們將說：`resources/views/pagination-links.blade.php`
+3. 現在通過將其傳遞給 `->links()` 方法在您的 Blade 視圖中引用它：
 
-@component('components.code', ['lang' => 'php'])
-@verbatim
+```php
 {{ $posts->links('pagination-links') }}
-@endverbatim
-@endcomponent
+```
 
-## Updated: JavaScript Hooks {#hooks}
-V2 offers the same JavaScript hooks as V1, but with three distinct updates:
+## 更新：JavaScript 鉤子 {#hooks}
+V2 提供了與 V1 相同的 JavaScript 鉤子，但有三個明顯的更新：
 
-1. Their names are different
-1. The parameter orders have been updated to be more consistent
-1. In places where an instance of the "DomElement" wrapper was passed, now a native DOM element is passed
+1. 它們的名稱不同
+2. 參數順序已更新以更一致
+3. 在傳遞“DomElement”包裝器實例的地方，現在傳遞了本機 DOM 元素
 
-Here are the hook usages side by side for comparison:
+這裡是用於比較的鉤子用法：
 
-@component('components.table')
-| V1 Names | V2 Names / Usages |
+| V1 名稱 | V2 名稱 / 用法 |
 | --- | --- |
 | `livewire.hook('componentInitialized', (component) => {})` | `Livewire.hook('component.initialized', (component) => {})` |
 | `livewire.hook('elementInitialized', (el, component) => {})` | `Livewire.hook('element.initialized', (el, component) => {})` |
@@ -332,13 +324,11 @@ Here are the hook usages side by side for comparison:
 | `livewire.hook('responseReceived', (component, response) => {})` | `Livewire.hook('message.received', (message, component) => {})` |
 | `livewire.hook('afterDomUpdate', (component) => {})` | `Livewire.hook('message.processed', (message, component) => {})` |
 | `livewire.hook('beforeDomUpdate', (component) => {})` | `Livewire.hook('message.received', (message, component) => {})` |
-@endcomponent
+```
 
-*Note: in some instances, a `message` object is now passed in instead of a `response` object. `response` can be accessed as a property of `message`: `message.response`*
+## 更新：VueJS 支援 {#vuejs}
 
-## Updated: VueJS Support {#vuejs}
-
-If your Livewire currently depends on the [vue-plugin](https://github.com/livewire/vue), you will need to upgrade from version `0.2.x` to `0.3.x`
+如果您的 Livewire 目前依賴於 [vue-plugin](https://github.com/livewire/vue)，您將需要從版本 `0.2.x` 升級到 `0.3.x`
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -354,12 +344,11 @@ If your Livewire currently depends on the [vue-plugin](https://github.com/livewi
 @endverbatim
 @endcomponent
 
+## 簽退 {#signing-off}
+希望這次升級對您的影響不大。
 
-## Signing Off {#signing-off}
-Hopefully, the impact of this upgrade isn't much for you.
+如果您有任何問題或對本文檔進行更正，請在存儲庫上[提交 GitHub 問題。](https://github.com/livewire/livewire/issues/new/choose)
 
-If you have questions or corrections to make to this document, please [submit a GitHub issue on the repository.](https://github.com/livewire/livewire/issues/new/choose)
-
-As always, thanks for your support and thanks for using Livewire!
+一如既往，感謝您的支持，並感謝您使用 Livewire！
 
 - Caleb

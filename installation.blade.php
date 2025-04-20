@@ -1,25 +1,25 @@
-* [Requirements](#requirements)
-* [Install The Package](#install-package)
-* [Include The Assets](#include-js)
-* [Publishing The Config File](#publishing-config)
-* [Publishing Frontend Assets](#publish-assets)
-* [Configuring The Asset Base URL](#configuring-the-asset-base-url)
+* [需求](#requirements)
+* [安裝套件](#install-package)
+* [包含資源檔](#include-js)
+* [發佈組態檔](#publishing-config)
+* [發佈前端資源](#publish-assets)
+* [設定資源基礎 URL](#configuring-the-asset-base-url)
 
-## Requirements {#requirements}
+## 需求 {#requirements}
 
-1. PHP 7.2.5 or higher
-2. Laravel 7.0 or higher
+1. PHP 7.2.5 或更高版本
+2. Laravel 7.0 或更高版本
 
-Visit the [composer.json file on Github](https://github.com/livewire/livewire/blob/master/composer.json) for the complete list of package requirements.
+請查看 [Github 上的 composer.json 檔案](https://github.com/livewire/livewire/blob/master/composer.json) 以獲取完整的套件需求清單。
 
-## Install The Package {#install-package}
+## 安裝套件 {#install-package}
 
 @component('components.code', ['lang' => 'shell'])
 composer require livewire/livewire
 @endcomponent
 
-## Include The Assets {#include-js}
-Add the following Blade directives in the `head` tag, and before the end `body` tag in your template.
+## 包含資源檔 {#include-js}
+在您的模板中，在 `head` 標籤中和結束 `body` 標籤之前添加以下 Blade 指示詞。
 
 @component('components.code')
 @verbatim
@@ -36,7 +36,7 @@ Add the following Blade directives in the `head` tag, and before the end `body` 
 @endverbatim
 @endcomponent
 
-You can alternatively use the tag syntax.
+您也可以使用標籤語法。
 
 @component('components.code')
 @verbatim
@@ -46,13 +46,13 @@ You can alternatively use the tag syntax.
 @endverbatim
 @endcomponent
 
-That's it! That's all you need to start using Livewire. Everything else on this page is optional.
+就是這樣！這就是您開始使用 Livewire 所需的全部。本頁面上的其他內容都是可選的。
 
-## Publishing The Config File {#publishing-config}
+## 發佈組態檔 {#publishing-config}
 
-Livewire aims for "zero-configuration" out-of-the-box, but some users require more configuration options.
+Livewire 旨在實現“開箱即用”的“零配置”，但有些用戶需要更多的配置選項。
 
-You can publish Livewire's config file with the following artisan command:
+您可以使用以下 artisan 命令發佈 Livewire 的組態檔：
 
 @component('components.code', ['lang' => 'shell'])
 @verbatim
@@ -60,9 +60,9 @@ php artisan livewire:publish --config
 @endverbatim
 @endcomponent
 
-## Publishing Frontend Assets {#publish-assets}
+## 發佈前端資源 {#publish-assets}
 
-If you prefer the JavaScript assets to be served by your web server not through Laravel, use the `livewire:publish` command:
+如果您希望將 JavaScript 資源通過您的 Web 伺服器提供而不是通過 Laravel，請使用 `livewire:publish` 命令：
 
 @component('components.code', ['lang' => 'shell'])
 @verbatim
@@ -70,10 +70,9 @@ php artisan livewire:publish --assets
 @endverbatim
 @endcomponent
 
-To keep the assets up-to-date and avoid issues in future updates, we **highly recommend** adding the command to the `post-autoload-dump` scripts in your `composer.json` file:
+為了使資源保持最新並避免未來更新中的問題，**強烈建議**將該命令添加到您的 `composer.json` 檔案中的 `post-autoload-dump` 腳本中：
 
-@component('components.code', ['lang' => 'json'])
-@verbatim
+```json
 {
     "scripts": {
         "post-autoload-dump": [
@@ -83,24 +82,24 @@ To keep the assets up-to-date and avoid issues in future updates, we **highly re
         ]
     }
 }
-@endverbatim
-@endcomponent
+```
 
-## Configuring The Asset Base URL {#configuring-the-asset-base-url}
+## 配置資源基礎 URL {#configuring-the-asset-base-url}
 
-By default, Livewire serves its JavaScript portion (`livewire.js`) from the following route in your app: `/livewire/livewire.js`.
+預設情況下，Livewire 從您的應用程式中的以下路由提供其 JavaScript 部分（`livewire.js`）：`/livewire/livewire.js`。
 
-The actual script tag that gets generated defaults to:<br> `<script src="/livewire/livewire.js"></script>`
+實際生成的腳本標籤預設為：<br> `<script src="/livewire/livewire.js"></script>`
 
-There are two scenarios that will cause this default behavior to break:
+有兩種情況會導致此預設行為失效：
 
-1. You publish the Livewire assets and are now serving them from a sub-folder like "assets".
+1. 您發佈了 Livewire 資源，現在從子文件夾（如 "assets"）提供它們。
 
-2. Your app is hosted on a non-root path on your domain. For example: `https://your-laravel-app.com/application`. In this case, the actual assets will be served from `/application/livewire/livewire.js`, but the generated script tag, will be trying to fetch `/livewire/livewire.js`.
+2. 您的應用程式託管在您域名上的非根路徑上。例如：`https://your-laravel-app.com/application`。在這種情況下，實際資源將從 `/application/livewire/livewire.js` 提供，但生成的腳本標籤將嘗試擷取 `/livewire/livewire.js`。
 
-To solve either of these issues, you can configure the "asset_url" in `config/livewire.php` to customize what's prepended to the `src=""` attribute.
+要解決這兩個問題中的任何一個，您可以在 `config/livewire.php` 中配置 "asset_url"，以自定義要添加到 `src=""` 屬性的內容。
 
-For example, after publishing Livewire's config file, here are the settings that would fix the above two issues:
+例如，在發佈 Livewire 的組態檔後，以下是可以解決上述兩個問題的設置：
 
 1. `'asset_url' => '/assets'`
 2. `'asset_url' => '/application'`
+```

@@ -1,5 +1,4 @@
-
-If you've used front-end frameworks like Angular, React, or Vue, you are already familiar with this concept. However, if you are new to this concept, allow me to demonstrate.
+如果您已經使用過像 Angular、React 或 Vue 這樣的前端框架，您對這個概念應該已經很熟悉。但是，如果您對這個概念還不熟悉，讓我來演示一下。
 
 @component('components.code-component')
 @slot('class')
@@ -21,17 +20,17 @@ class MyNameIs extends Component
 @endslot
 @endcomponent
 
-When the user types something into the text field, the value of the `$name` property will automatically update. Livewire knows to keep track of the provided name because of the `wire:model` directive.
+當用戶在文本字段中輸入內容時，`$name` 屬性的值將自動更新。Livewire 會根據 `wire:model` 指示詞來跟踪提供的名稱。
 
-Internally, Livewire listens for "input" events on the element and updates the class property with the element's value. Therefore, you can apply `wire:model` to any element that emits `input` events.
+在內部，Livewire 監聽元素上的 "input" 事件並使用元素的值更新類屬性。因此，您可以將 `wire:model` 應用於任何發出 `input` 事件的元素。
 
 @component('components.tip')
-By default, Livewire applies a 150ms debounce to text inputs. You can override this default like so: <code>&lt;input type="text" wire:model.debounce.0ms="name"&gt;</code>
+默認情況下，Livewire 對文本輸入應用了 150 毫秒的防彈跳。您可以像這樣覆蓋此默認值：<code>&lt;input type="text" wire:model.debounce.0ms="name"&gt;</code>
 @endcomponent
 
-Common elements to use `wire:model` on include:
+常用的應用 `wire:model` 的元素包括：
 
-Element Tag |
+元素標籤 |
 --- |
 `<input type="text">` |
 `<input type="radio">` |
@@ -39,30 +38,30 @@ Element Tag |
 `<select>` |
 `<textarea>` |
 
-## Nested Data Binding {#nested-binding}
+## 嵌套數據綁定 {#nested-binding}
 
-Livewire supports nested data binding using dot notation:
+Livewire 支持使用點表示法進行嵌套數據綁定：
 
 @component('components.code')
 <input type="text" wire:model="form.name">
 @endcomponent
 
-## Debouncing Input {#debouncing}
+## 防彈跳輸入 {#debouncing}
 
-Livewire offers a "debounce" modifier when using `wire:model`. If you want to apply a 1 second debounce to an input, you include the modifier like so:
+當使用 `wire:model` 時，Livewire 提供了 "debounce" 修飾符。如果您想對輸入應用 1 秒的防彈跳，您可以這樣包含修飾符：
 
 @component('components.code')
 <input type="text" wire:model.debounce.1000ms="name">
 
-<!-- You can also specify the time in seconds: -->
+<!-- 您也可以指定以秒為單位的時間： -->
 <input type="text" wire:model.debounce.1s="name">
 @endcomponent
 
-## Lazily Updating {#lazilly-updating}
+## 延遲更新 {#lazilly-updating}
 
-By default, Livewire sends a request to server after every "input" event. This is usually fine for things like `<select>` elements that don't update frequently, however, this is often unnecessary for text fields that update as the user types.
+默認情況下，Livewire 在每次 "input" 事件後向服務器發送請求。對於不經常更新的 `<select>` 元素來說，這通常是可以接受的，但對於隨著用戶輸入而更新的文本字段來說，這通常是不必要的。
 
-In those cases, use the `lazy` directive modifier to listen for the native "change" event.
+在這些情況下，使用 `lazy` 指令修飾符來監聽原生的 "change" 事件。
 
 @component('components.code-component')
 @slot('class')
@@ -84,4 +83,4 @@ class MyNameIs extends Component
 @endslot
 @endcomponent
 
-Now, the `$name` property will only be updated when the user clicks away from the input field.
+現在，當用戶從輸入欄中點擊離開時，`$name` 屬性將只會被更新。

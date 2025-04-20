@@ -1,12 +1,12 @@
-* [Introduction](#introduction)
+* [簡介](#introduction)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-PHP Traits are a great way to re-use functionality between multiple Livewire components.
+PHP Traits 是在多個 Livewire 元件之間重複使用功能的絕佳方式。
 
-For example, you might have multiple "data table" components in your application that all share the same logic surrounding sorting.
+例如，您可能在應用程式中有多個 "資料表" 元件，它們都共享相同的排序邏輯。
 
-Rather than duplicating the following sorting boilerplate in every component:
+與在每個元件中重複以下排序樣板不同：
 
 @component('components.code-component')
 @slot('class')
@@ -38,7 +38,7 @@ class ShowPosts extends Component
 @endslot
 @endcomponent
 
-You could instead extract this behavior into a re-usable trait called `WithSorting`:
+您可以將此行為提取到一個可重複使用的 trait 中，名為 `WithSorting`：
 
 @component('components.code-component')
 @slot('class')
@@ -81,7 +81,7 @@ trait WithSorting
 @endslot
 @endcomponent
 
-Additionally, if you want to use Livewire's lifecycle hooks inside your traits but still be able to use them inside your component, Livewire offers a syntax that allows you to do this:
+此外，如果您想在 trait 內部使用 Livewire 的生命週期鉤子，但仍然能夠在元件內部使用它們，Livewire 提供了一種語法，允許您這樣做：
 
 @component('components.code-component')
 @slot('class')
@@ -100,50 +100,47 @@ trait WithSorting
         //
     }
 
-    public function mountWithSorting()
-    {
-        //
-    }
-
-    public function updatingWithSorting($name, $value)
-    {
-        //
-    }
-
-    public function updatedWithSorting($name, $value)
-    {
-        //
-    }
-
-    public function hydrateWithSorting()
-    {
-        //
-    }
-
-    public function dehydrateWithSorting()
-    {
-        //
-    }
-
-    public function renderingWithSorting()
-    {
-        //
-    }
-
-    public function renderedWithSorting($view)
-    {
-        //
-    }
+```php
+public function mountWithSorting()
+{
+    //
 }
-@endverbatim
-@endslot
-@endcomponent
 
-Livewire offers hooks for query strings as well.
+public function updatingWithSorting($name, $value)
+{
+    //
+}
 
-@component('components.code-component')
-@slot('class')
-@verbatim
+public function updatedWithSorting($name, $value)
+{
+    //
+}
+
+public function hydrateWithSorting()
+{
+    //
+}
+
+public function dehydrateWithSorting()
+{
+    //
+}
+
+public function renderingWithSorting()
+{
+    //
+}
+
+public function renderedWithSorting($view)
+{
+    //
+}
+}
+```
+
+Livewire 提供了用於查詢字串的鉤子。
+
+```php
 trait WithSorting
 {
     ...
@@ -163,8 +160,7 @@ trait WithSorting
         ];
     }
 }
-@endverbatim
-@endslot
-@endcomponent
+```
 
-Note that you are allowed to override any query string in your component class.
+請注意，您可以在組件類中覆蓋任何查詢字串。
+```

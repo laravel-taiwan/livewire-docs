@@ -1,37 +1,37 @@
-* [The `make` command](#make-command)
-    * [Modifying Stubs](#modifying-stubs)
-* [The `move` Command](#move-command)
-* [The `copy` Command](#copy-command)
-* [The `delete` Command](#delete-command)
+* [執行 `make` 指令](#make-command)
+    * [修改 Stubs](#modifying-stubs)
+* [執行 `move` 指令](#move-command)
+* [執行 `copy` 指令](#copy-command)
+* [執行 `delete` 指令](#delete-command)
 
-## The `make` command {#make-command}
+## 執行 `make` 指令 {#make-command}
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire foo
-# Creates Foo.php & foo.blade.php
+# 建立 Foo.php & foo.blade.php
 
 php artisan make:livewire foo-bar
-# Creates FooBar.php & foo-bar.blade.php
+# 建立 FooBar.php & foo-bar.blade.php
 
 php artisan make:livewire Foo
-# Creates Foo.php & foo.blade.php
+# 建立 Foo.php & foo.blade.php
 
 php artisan make:livewire FooBar
-# Creates FooBar.php & foo-bar.blade.php
+# 建立 FooBar.php & foo-bar.blade.php
 
 php artisan make:livewire foo.bar
-# Creates Foo/Bar.php & foo/bar.blade.php
+# 建立 Foo/Bar.php & foo/bar.blade.php
 
 php artisan make:livewire foo --inline
-# Creates only Foo.php
+# 僅建立 Foo.php
 
 php artisan make:livewire foo --test
-# Creates Foo.php, foo.blade.php, & FooTest.php
+# 建立 Foo.php, foo.blade.php, & FooTest.php
 @endcomponent
 
-Once created, you can render your components in a Blade file with the <code>&#64;livewire('component-name')</code> blade directive.
+建立後，您可以在 Blade 檔案中使用 <code>&#64;livewire('component-name')</code> blade 指示詞來呈現您的元件。
 
-Think of Livewire components like Blade includes. You can insert <code>&#64;livewire</code> anywhere in a Blade view and it will render.
+將 Livewire 元件視為 Blade 包含。您可以在 Blade 檢視中的任何位置插入 <code>&#64;livewire</code> 並呈現。
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -42,7 +42,7 @@ Think of Livewire components like Blade includes. You can insert <code>&#64;live
 @endverbatim
 @endcomponent
 
-If you are on Laravel 7 or greater, you can use the tag syntax.
+如果您使用 Laravel 7 或更高版本，您可以使用標籤語法。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -50,27 +50,27 @@ If you are on Laravel 7 or greater, you can use the tag syntax.
 @endverbatim
 @endcomponent
 
-### Modifying Stubs {#modifying-stubs}
+### 修改 Stubs {#modifying-stubs}
 
-You can customize the stubs (templates) that Livewire uses to create new component classes and views using the `livewire:stubs` command.
+您可以使用 `livewire:stubs` 指令自訂 Livewire 用於建立新元件類別和檢視的 Stubs（模板）。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan livewire:stubs
 @endcomponent
 
-The above command will create three files:
+上述指令將建立三個檔案：
 
 * `stubs/livewire.stub`
 * `stubs/livewire.view.stub`
 * `stubs/livewire.inline.stub`
 
-Now, when you run the `make:livewire` command, Livewire will use the above stub files as the template.
+現在，當您執行 `make:livewire` 指令時，Livewire 將使用上述 stub 檔案作為模板。
 
-## The `move` Command {#move-command}
+## 執行 `move` 指令 {#move-command}
 
-The `php artisan livewire:move` command will move/rename the component class, blade view and the component test if it exists, taking care of namespaces and paths
+`php artisan livewire:move` 指令將移動/重新命名元件類別、blade 檢視和元件測試（如果存在），並處理命名空間和路徑
 
-Here is an example of usage:
+這是使用範例：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan livewire:move foo bar.baz
@@ -78,47 +78,47 @@ php artisan livewire:move foo bar.baz
 @endcomponent
 
 @component('components.tip')
-For convenience, <code>livewire:move</code> is aliased to <code>livewire:mv</code>
+為了方便起見，<code>livewire:move</code> 別名為 <code>livewire:mv</code>
 @endcomponent
 
-## The `copy` Command {#copy-command}
+## `copy` 指令 {#copy-command}
 
-The `php artisan livewire:copy` command will create copies of the component class and blade view, taking care of namespaces and paths
+`php artisan livewire:copy` 指令將建立元件類別和 blade 檢視的複本，並處理命名空間和路徑
 
-Here are a few examples of usage:
+以下是一些使用範例：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan livewire:copy foo bar
-# Copies Foo.php & foo.blade.php to Bar.php and bar.blade.php
+# 複製 Foo.php 和 foo.blade.php 到 Bar.php 和 bar.blade.php
 
 php artisan livewire:copy foo bar --force
-# Overwrites existing "bar" component
+# 覆寫現有的 "bar" 元件
 
 php artisan livewire:copy foo bar --test
-# Copies Foo.php & foo.blade.php & FooTest.php to Bar.php & bar.blade.php & BarTest.php
+# 複製 Foo.php 和 foo.blade.php 和 FooTest.php 到 Bar.php 和 bar.blade.php 和 BarTest.php
 @endcomponent
 
 @component('components.tip')
-For convenience, <code>livewire:copy</code> is aliased to <code>livewire:cp</code>
+為了方便起見，<code>livewire:copy</code> 別名為 <code>livewire:cp</code>
 @endcomponent
 
-## The `delete` Command {#delete-command}
+## `delete` 指令 {#delete-command}
 
-The `php artisan livewire:delete` command will remove the component class and blade view.
+`php artisan livewire:delete` 指令將移除元件類別和 blade 檢視。
 
-Here are a few examples of usage:
+以下是一些使用範例：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan livewire:delete foo
-# Removes Foo.php & foo.blade.php
+# 移除 Foo.php 和 foo.blade.php
 
 php artisan livewire:delete foo --force
-# Removes without confirmation prompt
+# 不需確認提示即可移除
 
 php artisan livewire:delete foo --test
-# Removes Foo.php & foo.blade.php & FooTest.php
+# 移除 Foo.php 和 foo.blade.php 和 FooTest.php
 @endcomponent
 
 @component('components.tip')
-For convenience, <code>livewire:delete</code> is aliased to <code>livewire:rm</code>
+為了方便起見，<code>livewire:delete</code> 別名為 <code>livewire:rm</code>
 @endcomponent

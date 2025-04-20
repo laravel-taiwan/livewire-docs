@@ -1,10 +1,10 @@
-* [Introduction](#introduction)
+* [簡介](#introduction)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-In cases where it's useful to "flash" a success or failure message to the user, Livewire supports Laravel's system for flashing data to the session.
+在需要向使用者“快閃”成功或失敗訊息時，Livewire 支援 Laravel 的快閃資料到 Session 的系統。
 
-Here's a common example of its usage:
+以下是一個常見的使用範例：
 
 @component('components.code-component')
 @slot('class')
@@ -23,7 +23,7 @@ class UpdatePost extends Component
 
         $this->post->save();
 
-        session()->flash('message', 'Post successfully updated.');
+        session()->flash('message', '文章已成功更新。');
     }
 }
 @endverbatim
@@ -39,17 +39,17 @@ class UpdatePost extends Component
         @endif
     </div>
 
-    Title: <input wire:model="post.title" type="text">
+    標題: <input wire:model="post.title" type="text">
 
-    <button>Save</button>
+    <button>儲存</button>
 </form>
 @endverbatim
 @endslot
 @endcomponent
 
-Now, after the user clicks "Save" and their post is updated, they will see "Post successfully updated" on the page.
+現在，當使用者點擊“儲存”並更新他們的文章後，他們將在頁面上看到“文章已成功更新”。
 
-If you wish to add flash data to a redirect and show the message on the destination page instead, Livewire is smart enough to persist the flash data for one more request. For example:
+如果您希望將快閃資料添加到重新導向並在目的地頁面上顯示訊息，Livewire 足夠智能，可以將快閃資料持續保存一個請求。例如：
 
 @component('components.code-component')
 @slot('class')
@@ -60,7 +60,7 @@ public function update()
 
     $this->post->save();
 
-    session()->flash('message', 'Post successfully updated.');
+    session()->flash('message', '文章已成功更新。');
 
     return redirect()->to('/posts');
 }
@@ -68,4 +68,4 @@ public function update()
 @endslot
 @endcomponent
 
-Now when a user "Saves" a post, they will be redirected to the "/posts" endpoint and see the flash message there. This assumes the `/posts` page has the proper Blade snippet to display flash messages.
+現在當使用者“儲存”一篇文章時，他們將被重新導向到“/posts”端點並在那裡看到快閃訊息。這假設“/posts”頁面有適當的 Blade 片段來顯示快閃訊息。

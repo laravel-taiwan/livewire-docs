@@ -1,14 +1,14 @@
-* [Introduction](#introduction)
-* [Passing Action Parameters](#action-parameters)
-* [Event Modifiers](#event-modifiers)
-  * [Keydown Modifiers](#keydown-modifiers)
-* [Magic Actions](#magic-actions)
+* [簡介](#introduction)
+* [傳遞行為引數](#action-parameters)
+* [事件修飾符](#event-modifiers)
+  * [按鍵按下修飾符](#keydown-modifiers)
+* [魔法行為](#magic-actions)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-The goal of actions in Livewire is to be able to easily listen to page interactions, and call a method on your Livewire component (re-rendering the component).
+Livewire 中的行為目標是能夠輕鬆地監聽頁面互動，並在 Livewire 元件上調用方法（重新呈現元件）。
 
-Here's the basic usage:
+以下是基本用法：
 
 @component('components.code-component')
 @slot('class')
@@ -31,19 +31,19 @@ class ShowPost extends Component
 @endslot
 @endcomponent
 
-Livewire currently offers a handful of directives to make listening to browser events trivial. The common format for all of them is: `wire:[dispatched browser event]="[action]"`.
+目前 Livewire 提供了一些指示詞，使監聽瀏覽器事件變得輕鬆。它們的通用格式是：`wire:[觸發的瀏覽器事件]="[行為]"`。
 
-Here are some common events you may need to listen for:
+以下是您可能需要監聽的一些常見事件：
 
 @component('components.table')
-Event | Directive
+事件 | 指示詞
 --- | ---
 click | `wire:click`
 keydown | `wire:keydown`
 submit | `wire:submit`
 @endcomponent
 
-Here are a few examples of each in HTML:
+以下是在 HTML 中的一些示例：
 
 @component('components.code')
 <button wire:click="doSomething">Do Something</button>
@@ -62,28 +62,29 @@ Here are a few examples of each in HTML:
 @endcomponent
 
 @component('components.tip')
-You can listen for any event dispatched by the element you are binding to. Let's say you have an element that dispatches a browser event called "foo", you could listen for that event like so: <code>&lt;button wire:foo="someAction"&gt;</code>
+您可以監聽綁定到的元素發送的任何事件。假設您有一個元素發送名為 "foo" 的瀏覽器事件，您可以這樣監聽該事件：<code>&lt;button wire:foo="someAction"&gt;</code>
 @endcomponent
 
 @component('components.warning')
-Like the above example using `wire:submit.prevent` directly at the form opening tag will generate "readonly" properties for all html elements inside the form during the requests.
+像上面的例子一樣，直接在表單開始標記處使用 `wire:submit.prevent` 將在請求期間為表單內的所有 HTML 元素生成 "readonly" 屬性。
 @endcomponent
 
-## Passing Action Parameters {#action-parameters}
+## 傳遞行為引數 {#action-parameters}
 
-You can pass extra parameters into a Livewire action directly in the expression like so:
+您可以直接在表達式中將額外的參數傳遞給 Livewire 行為，如下所示：
+
 
 @component('components.code')
 @verbatim
 
 <button wire:click="addTodo({{ $todo->id }}, '{{ $todo->name }}')">
-    Add Todo
+    新增待辦事項
 </button>
 
 @endverbatim
 @endcomponent
 
-Extra parameters passed to an action, will be passed through to the component's method as standard PHP params:
+對動作傳遞的額外參數，將作為標準的 PHP 參數傳遞到元件方法中：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -96,7 +97,7 @@ public function addTodo($id, $name)
 @endverbatim
 @endcomponent
 
-Action parameters are also capable of directly resolving a model by its key using a type hint.
+動作參數還可以直接使用類型提示來解析模型的鍵。
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -109,7 +110,7 @@ public function addTodo(Todo $todo, $name)
 @endverbatim
 @endcomponent
 
-If your action requires any services that should be resolved via Laravel's dependency injection container, you can list them in the action's signature before any additional parameters:
+如果您的動作需要通過 Laravel 的依賴注入容器解析的任何服務，您可以在動作的簽名中列出它們，放在任何額外參數之前：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -122,27 +123,27 @@ public function addTodo(TodoService $todoService, $id, $name)
 @endverbatim
 @endcomponent
 
-## Event Modifiers {#event-modifiers}
+## 事件修飾符 {#event-modifiers}
 
-Like you saw in the **keydown** example, Livewire directives sometimes offer "modifiers" to add extra functionality to an event. Below are the available modifiers that can be used with any event.
+就像您在 **keydown** 範例中看到的那樣，Livewire 指令有時會提供 "修飾符" 來為事件添加額外功能。以下是可與任何事件一起使用的可用修飾符。
 
 @component('components.table')
-Modifier | Description
+修飾符 | 說明
 --- | ---
-stop | Equivalent of `event.stopPropagation()`
-prevent | Equivalent of `event.preventDefault()`
-self | Only triggers an action if the event was triggered on itself. This prevents outer elements from catching events that were triggered from a child element. (Like often in the case of registering a listener on a modal backdrop)
-debounce.150ms | Adds an Xms debounce to the handling of the action.
+stop | 等同於 `event.stopPropagation()`
+prevent | 等同於 `event.preventDefault()`
+self | 只有在事件是在自身上觸發時才觸發動作。這可以防止外部元素捕獲從子元素觸發的事件。(就像在模態框背景上註冊監聽器時經常發生的情況)
+debounce.150ms | 對動作的處理添加 X 毫秒的防彈跳。
 @endcomponent
 
-### Keydown Modifiers {#keydown-modifiers}
+### Keydown 修飾符 {#keydown-modifiers}
 
-To listen for specific keys on **keydown** events, you can pass the name of the key as a modifier. You can directly use any valid key names exposed via [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) as modifiers by converting them to kebab-case.
+要在 **keydown** 事件上聆聽特定按鍵，您可以將按鍵的名稱作為修飾符傳遞。您可以直接使用 [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent.key/Key_Values) 公開的任何有效按鍵名稱，將它們轉換為 kebab-case。
 
-Here is a quick list of some common ones you may need:
+這裡是您可能需要的一些常見事項的快速清單：
 
 @component('components.table')
-Native Browser Event | Livewire Modifier
+原生瀏覽器事件 | Livewire 修改器
 --- | ---
 Backspace | backspace
 Escape | escape
@@ -155,26 +156,26 @@ ArrowRight | arrow-right
 <input wire:keydown.page-down="foo">
 @endcomponent
 
-In the above example, the handler will only be called if `event.key` is equal to 'PageDown'.
+在上面的示例中，只有當 `event.key` 等於 'PageDown' 時，處理程序才會被調用。
 
-## Magic Actions {#magic-actions}
-In Livewire, there are some "magic" actions that are usually prefixed with a "$" symbol:
+## 魔法操作 {#magic-actions}
+在 Livewire 中，通常以 "$" 符號為前綴的一些 "魔法" 操作：
 
 @component('components.table')
-Function | Description
+函式 | 描述
 --- | ---
-$refresh | Will re-render the component without firing any action
-$set('_property_', _value_) | Shortcut to update the value of a property
-$toggle('_property_') | Shortcut to toggle boolean properties on or off
-$emit('_event_', _...params_) | Will emit an event on the global event bus, with the provided params
-$event | A _special_ variable that holds the value of the event fired that triggered the action. Example usage: `wire:change="setSomeProperty($event.target.value)"`
+$refresh | 將重新渲染組件，而不觸發任何操作
+$set('_property_', _value_) | 更新屬性值的快捷方式
+$toggle('_property_') | 切換布爾屬性的快捷方式
+$emit('_event_', _...params_) | 將在全局事件總線上發出事件，並提供參數
+$event | 一個 _特殊_ 變數，保存觸發操作的事件值。示例用法：`wire:change="setSomeProperty($event.target.value)"`
 @endcomponent
 
-You can pass these as the value of an event listener to do special things in Livewire.
+您可以將這些作為事件監聽器的值傳遞，以在 Livewire 中執行特殊操作。
 
-Let's take `$set()` for example. It can be used to manually set a component property's value. Consider the `Counter` component's view.
+讓我們以 `$set()` 為例。它可用於手動設置組件屬性的值。考慮 `Counter` 組件的視圖。
 
-**Before**
+**之前**
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -185,7 +186,7 @@ Let's take `$set()` for example. It can be used to manually set a component prop
 @endverbatim
 @endcomponent
 
-**After**
+**之後**
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -196,9 +197,9 @@ Let's take `$set()` for example. It can be used to manually set a component prop
 @endverbatim
 @endcomponent
 
-Notice that we are no longer calling the `setMessageToHello` function, we are directly specifying, what we want data set to.
+請注意，我們不再調用 `setMessageToHello` 函式，而是直接指定我們要設置的數據。
 
-It can also be used in the backend when listening for an event. For example, if you have one component that emits an event like this:
+它也可以在後端用於監聽事件。例如，如果您有一個發出事件的組件，像這樣：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -206,7 +207,7 @@ $this->emit('some-event');
 @endverbatim
 @endcomponent
 
-Then in another component you can use a magic action for example `$refresh()` instead of having to point the listener to a method:
+然後在另一個元件中，您可以使用一個魔法動作，例如 `$refresh()`，而不必指向一個方法的監聽器：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim

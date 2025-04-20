@@ -1,54 +1,54 @@
-* [Template Directives](#template-directives)
-* [Alpine Component Object (`$wire`)](#alpine-component-object)
-* [Global Livewire JavaScript Object](#global-livewire-js)
-* [JavaScript Hooks](#js-hooks)
-* [Component Class Lifecycle Hooks](#component-class-lifecycle)
-* [Component Class Protected Properties](#component-class-protected-properties)
-* [Component Class Traits](#component-class-traits)
-* [Class Methods](#class-methods)
-* [PHP Testing Methods](#php-testing-methods)
-* [Artisan Commands](#artisan-commands)
-* [PHP Lifecycle Hooks](#php-lifecycle-hooks)
+* [模板指令](#template-directives)
+* [Alpine 元件物件 (`$wire`)](#alpine-component-object)
+* [全域 Livewire JavaScript 物件](#global-livewire-js)
+* [JavaScript 鉤子](#js-hooks)
+* [元件類別生命週期鉤子](#component-class-lifecycle)
+* [元件類別保護屬性](#component-class-protected-properties)
+* [元件類別特性](#component-class-traits)
+* [類別方法](#class-methods)
+* [PHP 測試方法](#php-testing-methods)
+* [Artisan 指令](#artisan-commands)
+* [PHP 生命週期鉤子](#php-lifecycle-hooks)
 
-Already familiar with Livewire and want to skip the long-form documentation? Here's a giant list of everything available in Livewire.
+已經熟悉 Livewire 並想跳過冗長的文件？這裡有 Livewire 中所有可用功能的巨大清單。
 
-### Template Directives {#template-directives}
-These are directives added to elements within Livewire component templates.
+### 模板指令 {#template-directives}
+這些是添加到 Livewire 元件模板中元素的指令。
 
 @component('components.code', ['lang' => 'blade'])
 <button wire:click="save">...</button>
 @endcomponent
 
 @component('components.table')
-Directive | Description
+指令 | 說明
 --- | ---
-`wire:key="foo"` | Acts as a reference point for Livewire's DOM diffing system. Useful for adding/removing elements, and keeping track of lists.
-`wire:click="foo"` | Listens for a "click" event, and fires the "foo" method in the component.
-`wire:click.prefetch="foo"` | Listens for a "mouseenter" event, and "prefetches" the result of the "foo" method in the component. Then, if it is clicked, will swap in the "prefetched" result (without an extra request), if it's not clicked, will throw away the cached result.
-`wire:keydown.enter="foo"` | Listens for a keydown event on the `enter` key, which fires the "foo" method in the component.
-`wire:foo="bar"` | Listens for a browser event called "foo". (You can listen for *any* browser DOM event - not just those fired by Livewire).
-`wire:model="foo"` | Assuming `$foo` is a public property on the component class, every time an input element with this directive is updated, the property synchronizes with its value.
-`wire:model.debounce.100ms="foo"` | Debounces the `input` events emitted by the element every 100 milliseconds.
-`wire:model.lazy="foo"` | Lazily syncs the input with its corresponding component property at rest.
-`wire:model.defer="foo"` | Defers syncing the input with the Livewire property until an "action" is performed. This saves drastically on server roundtrips.
-`wire:poll.500ms="foo"` | Runs the "foo" method on the component class every 500 milliseconds.
-`wire:init="foo"` | Runs the "foo" method on the component immediately after it renders on the page.
-`wire:loading` | Hides the element by default, and makes it visible while network requests are in transit.
-`wire:loading.class="foo"` | Adds the `foo` class to the element while network requests are in transit.
-`wire:loading.class.remove="foo"` | Removes the `foo` class while network requests are in transit.
-`wire:loading.attr="disabled"` | Adds the `disabled="true"` attribute while network requests are in transit.
-`wire:dirty` | Hides the element by default, and makes it visible while the element's state is "dirty" (different from what exists on the backend).
-`wire:dirty.class="foo"` | Adds the `foo` class to the element while it's dirty.
-`wire:dirty.class.remove="foo"` | Removes the `foo` class while the element is dirty.
-`wire:dirty.attr="disabled"` | Adds the `disabled="true"` attribute while the element's dirty.
-`wire:target="foo"` | Scopes `wire:loading` and `wire:dirty` functionality to a specific action.
-`wire:ignore` | Instructs Livewire to not update the element or its children when updating the DOM from a server request. Useful when using third-party JavaScript libraries within Livewire components.
-`wire:ignore.self` | The "self" modifier restricts updates to the element itself, but allows modifications to its children.
+`wire:key="foo"` | 作為 Livewire 的 DOM 差異系統的參考點。用於添加/移除元素，以及跟踪清單。
+`wire:click="foo"` | 監聽 "click" 事件，並在元件中觸發 "foo" 方法。
+`wire:click.prefetch="foo"` | 監聽 "mouseenter" 事件，並 "預取" 元件中 "foo" 方法的結果。然後，如果被點擊，將交換 "預取" 的結果（無需額外請求），如果未被點擊，將捨棄快取的結果。
+`wire:keydown.enter="foo"` | 監聽 `enter` 鍵的 keydown 事件，觸發元件中的 "foo" 方法。
+`wire:foo="bar"` | 監聽名為 "foo" 的瀏覽器事件。（您可以監聽 *任何* 瀏覽器 DOM 事件 - 不僅僅是 Livewire 觸發的事件）。
+`wire:model="foo"` | 假設 `$foo` 是元件類別上的公共屬性，每當更新具有此指令的輸入元素時，該屬性與其值同步。
+`wire:model.debounce.100ms="foo"` | 每 100 毫秒阻止元素發出的 `input` 事件。
+`wire:model.lazy="foo"` | 在休息時懶惰地將輸入與其對應的元件屬性同步。
+`wire:model.defer="foo"` | 推遲將輸入與 Livewire 屬性同步，直到執行 "動作" 為止。這在節省服務器往返時有很大幫助。
+`wire:poll.500ms="foo"` | 每 500 毫秒在元件類別上運行 "foo" 方法。
+`wire:init="foo"` | 在元件渲染在頁面上後立即運行 "foo" 方法。
+`wire:loading` | 默認情況下隱藏元素，並在網絡請求傳輸時顯示。
+`wire:loading.class="foo"` | 在網絡請求傳輸時將 `foo` 類添加到元素。
+`wire:loading.class.remove="foo"` | 在網絡請求傳輸時刪除 `foo` 類。
+`wire:loading.attr="disabled"` | 在網絡請求傳輸時添加 `disabled="true"` 屬性。
+`wire:dirty` | 默認情況下隱藏元素，並在元素狀態為 "dirty"（與後端存在的不同）時顯示。
+`wire:dirty.class="foo"` | 在元素為 dirty 時將 `foo` 類添加到元素。
+`wire:dirty.class.remove="foo"` | 在元素為 dirty 時刪除 `foo` 類。
+`wire:dirty.attr="disabled"` | 在元素為 dirty 時添加 `disabled="true"` 屬性。
+`wire:target="foo"` | 將 `wire:loading` 和 `wire:dirty` 功能範圍限定為特定操作。
+`wire:ignore` | 指示 Livewire 在從服務器請求更新 DOM 時不更新元素或其子元素。在 Livewire 元件中使用第三方 JavaScript 函式庫時很有用。
+`wire:ignore.self` | "self" 修飾符限制更新僅限於元素本身，但允許修改其子元素。
 @endcomponent
 
-### Alpine Component Object (`$wire`) {#alpine-component-object}
+### Alpine 元件物件 (`$wire`) {#alpine-component-object}
 
-These are methods and properties available on the `$wire` object provided to Alpine components within a Livewire template. [Read Full Documentation](/docs/2.x/alpine-js)
+這些是提供給 Livewire 模板中 Alpine 元件的 `$wire` 物件上可用的方法和屬性。[閱讀完整文件](/docs/2.x/alpine-js)
 
 @component('components.code', ['lang' => 'blade'])
 <div x-data>
@@ -59,51 +59,51 @@ These are methods and properties available on the `$wire` object provided to Alp
 @endcomponent
 
 @component('components.table')
-API | Description
+API | 說明
 --- | ---
-`$wire.foo` | Get the value of the "foo" property on the Livewire component
-`$wire.foo = 'bar'` | Set the value of the "foo" property on the Livewire component
-`$wire.bar(..args)` | Call the "bar" method (with params) on the Livewire component
-`let baz = await $wire.bar(..args)` | Call the "bar" method, but wait for the response and set `baz` to it
-`$wire.on('foo', (..args) => {})` | Call a function when the "foo" event is emitted
-`$wire.emit('foo', ...args)` | Emit the "foo" event to all Livewire components
-`$wire.emitUp('foo', ...args)` | Emit the "foo" event to parent components
-`$wire.emitSelf('foo', ...args)` | Emit the "foo" event only to this component
-`$wire.get('foo')` | Get the "foo" property
-`$wire.set('foo', 'bar')` | Set the "foo" property on the component
-`$wire.set('foo', 'bar', true)` | Defer setting the "foo" property on the component
-`$wire.call('foo', ..args)` | Call the "foo" method with params on the component
-`x-data="{ foo: $wire.entangle('foo') }"` | Entangle the value of "foo" between Livewire and Alpine
-`$wire.entangle('foo').defer` | Only update Livewire's "foo" next time a Livewire request is fired
+`$wire.foo` | 取得 Livewire 元件上 "foo" 屬性的值
+`$wire.foo = 'bar'` | 設定 Livewire 元件上 "foo" 屬性的值
+`$wire.bar(..args)` | 呼叫 Livewire 元件上 "bar" 方法（帶參數）
+`let baz = await $wire.bar(..args)` | 呼叫 "bar" 方法，但等待回應並將 `baz` 設為其值
+`$wire.on('foo', (..args) => {})` | 當 "foo" 事件被觸發時呼叫函式
+`$wire.emit('foo', ...args)` | 對所有 Livewire 元件發送 "foo" 事件
+`$wire.emitUp('foo', ...args)` | 對父元件發送 "foo" 事件
+`$wire.emitSelf('foo', ...args)` | 只對此元件發送 "foo" 事件
+`$wire.get('foo')` | 取得 "foo" 屬性
+`$wire.set('foo', 'bar')` | 在元件上設定 "foo" 屬性
+`$wire.set('foo', 'bar', true)` | 延遲設定元件上的 "foo" 屬性
+`$wire.call('foo', ..args)` | 呼叫元件上帶參數的 "foo" 方法
+`x-data="{ foo: $wire.entangle('foo') }"` | 在 Livewire 和 Alpine 之間綁定 "foo" 的值
+`$wire.entangle('foo').defer` | 只在下次 Livewire 請求觸發時更新 Livewire 的 "foo"
 @endcomponent
 
-### Global Livewire JavaScript Object {#global-livewire-js}
+### 全域 Livewire JavaScript 物件 {#global-livewire-js}
 
-These are methods available on the `window.Livewire` object in the frontend. These are for deeper Livewire interaction and customization.
+這些是前端中 `window.Livewire` 物件上可用的方法。這些方法用於更深入的 Livewire 互動和自定義。
 
 @component('components.table')
-Method | Description
---- | --- | ---
-`Livewire.first()` | Get the first Livewire component's JS object on the page
-`Livewire.find(componentId)` | Get a Livewire component by it's ID
-`Livewire.all()` | Get all the Livewire components on a page
-`Livewire.directive(directiveName, (el, directive, component) => {})` | Register a new Livewire directive (`wire:custom-directive`)
-`Livewire.hook(hookName, (...) => {})` | Call a method when JS lifecycle hook is fired. [Read more](#js-hooks)
-`Livewire.onLoad(() => {})` | Fires when Livewire is first finished loading on a page
-`Livewire.onError((message, statusCode) => {})` | Fires when a Livewire request fails. You can `return false` from the callback to prevent Livewire's default behavior
-`Livewire.onPageExpired((response, message) => {})` | When the page or session has expired it executes the callback instead of Livewire's [page expired dialog](/docs/2.x/deployment#page-expired-dialog)
-`Livewire.emit(eventName, ...params)` | Emit an event to all Livewire components listening on a page
-`Livewire.emitTo(componentName, eventName, ...params)` | Emit an event to specific component name
-`Livewire.on(eventName, (...params) => {})` | Listen for an event to be emitted from a component
-`Livewire.start()` | Boot Livewire on the page (done for you automatically via `@@livewireScripts`)
-`Livewire.stop()` | Tear down Livewire from the page
-`Livewire.restart()` | Stop, then start Livewire on the page
-`Livewire.rescan()` | Re-scan the DOM for newly added Livewire components
+方法 | 說明
+--- | ---
+`Livewire.first()` | 取得頁面上第一個 Livewire 元件的 JS 物件
+`Livewire.find(componentId)` | 透過 ID 取得 Livewire 元件
+`Livewire.all()` | 取得頁面上所有 Livewire 元件
+`Livewire.directive(directiveName, (el, directive, component) => {})` | 註冊新的 Livewire 指示詞 (`wire:custom-directive`)
+`Livewire.hook(hookName, (...) => {})` | 當 JS 生命週期鉤子觸發時呼叫方法。[閱讀更多](#js-hooks)
+`Livewire.onLoad(() => {})` | 當 Livewire 首次在頁面上完成載入時觸發
+`Livewire.onError((message, statusCode) => {})` | 當 Livewire 請求失敗時觸發。您可以在回調函式中 `return false` 以防止 Livewire 的預設行為
+`Livewire.onPageExpired((response, message) => {})` | 當頁面或會話已過期時，執行回調函式而不是 Livewire 的 [頁面過期對話框](/docs/2.x/deployment#page-expired-dialog)
+`Livewire.emit(eventName, ...params)` | 對所有頁面上監聽 Livewire 元件發送事件
+`Livewire.emitTo(componentName, eventName, ...params)` | 對特定元件名稱發送事件
+`Livewire.on(eventName, (...params) => {})` | 監聽從元件發送的事件
+`Livewire.start()` | 在頁面上啟動 Livewire（透過 `@@livewireScripts` 自動完成）
+`Livewire.stop()` | 從頁面上拆除 Livewire
+`Livewire.restart()` | 停止，然後重新啟動頁面上的 Livewire
+`Livewire.rescan()` | 重新掃描 DOM 以尋找新增的 Livewire 元件
 @endcomponent
 
 ### JavaScript Hooks {#js-hooks}
 
-These are "hooks" you can listen for in JavaScript. These allow you to hook into very specific parts of a Livewire component's JavaScript lifecycle for third-party packages or deep customizations. The abilities unlocked here are immense. A significant portion of Livewire's core uses these hooks to provide functionality.
+這些是您可以在 JavaScript 中監聽的 "hooks"。這些允許您鉤入 Livewire 元件的 JavaScript 生命週期的非常特定部分，以供第三方套件或深度自定義使用。這裡解鎖的功能是巨大的。Livewire 的核心部分使用這些 hooks 的一個重要部分來提供功能。
 
 @component('components.code', ['lang' => 'javascript'])
 Livewire.hook('component.initialized', component => {
@@ -112,22 +112,22 @@ Livewire.hook('component.initialized', component => {
 @endcomponent
 
 @component('components.table')
-Name | Params | Description
+名稱 | 參數 | 說明
 --- | --- | ---
-`component.initialized` | `(component)` | A new component has been initialized
-`element.initialized` | `(el, component)` | A new element has been initialized
-`element.updating` | `(fromEl, toEl, component)` | An element is about to be updated after a Livewire request
-`element.updated` | `(el, component)` | An element has just been updated from a Livewire request
-`element.removed` | `(el, component)` | An element has been removed after a Livewire request
-`message.sent` | `(message, component)` | A new Livewire message was just sent to the server
-`message.failed` | `(message, component)` | A Livewire ajax request (message) failed
-`message.received` | `(message, component)` | A message has been received (but hasn't affected the DOM)
-`message.processed` | `(message, component)` | A message has been fully received and implemented (DOM updates, etc...)
+`component.initialized` | `(component)` | 已初始化新元件
+`element.initialized` | `(el, component)` | 已初始化新元素
+`element.updating` | `(fromEl, toEl, component)` | 在 Livewire 請求後，元素即將更新
+`element.updated` | `(el, component)` | 元素剛從 Livewire 請求中更新
+`element.removed` | `(el, component)` | 元素已在 Livewire 請求後移除
+`message.sent` | `(message, component)` | 新的 Livewire 訊息剛發送到伺服器
+`message.failed` | `(message, component)` | Livewire ajax 請求 (訊息) 失敗
+`message.received` | `(message, component)` | 已接收訊息 (但尚未影響 DOM)
+`message.processed` | `(message, component)` | 訊息已完全接收並實施 (DOM 更新等等...)
 @endcomponent
 
-### Component Class Lifecycle Hooks {#component-class-lifecycle}
+### 元件類別生命週期 Hooks {#component-class-lifecycle}
 
-These are methods you can declare in your Livewire component classes to run code at specific times in the backend's lifecycle. [Read Full Documentation](/docs/2.x/lifecycle-hooks)
+這些是您可以在 Livewire 元件類別中聲明的方法，以在後端生命週期的特定時間運行代碼。[閱讀完整文件](/docs/2.x/lifecycle-hooks)
 
 @component('components.code', ['lang' => 'php'])
 class ShowPost extends Component
@@ -140,27 +140,27 @@ class ShowPost extends Component
 @endcomponent
 
 @component('components.table')
-Name | Description
+名稱 | 說明
 --- | ---
-`boot()` | Called on all requests, immediately after the component is instantiated, but before any other lifecycle methods are called
-`booted()` | Called on all requests, after the component is mounted or hydrated, but before any update methods are called
-`mount(...$params)` | Called when a Livewire component is newed up (think of it like a constructor)
-`hydrate()` | Called on subsequent Livewire requests after the component has been hydrated, but before any other action occurs
-`hydrateFoo()` | Runs after a property called $foo is hydrated
-`dehydrate()` | Called after `render()`, but before the component has been dehydrated and sent to the frontend
-`dehydrateFoo()` | Runs before a property called $foo is dehydrated
-`updating()` | Runs before any update to the Livewire component's data (Using wire:model, not directly inside PHP)
-`updated($field, $newValue)` | Called after a property has been updated
-`updatingFoo()` | Runs before a property called $foo is updated
-`updatedFoo($newValue)` | Called after the "foo" property has been updated
-`updatingFooBar()` | Runs before updating a nested property bar on the $foo property
-`updatedFooBar($newValue)` | Called after the nested "bar" key on the "foo" property has been updated
-`render()` | Called before "dehydrate" and renders the Blade view for the component
+`boot()` | 在所有請求上調用，在元件實例化後立即調用，但在調用任何其他生命週期方法之前
+`booted()` | 在所有請求上調用，在元件掛載或填充後，但在調用任何更新方法之前
+`mount(...$params)` | 當 Livewire 元件新建時調用 (類似於建構子)
+`hydrate()` | 在元件被填充後的後續 Livewire 請求上調用，但在發生任何其他操作之前
+`hydrateFoo()` | 在名為 $foo 的屬性被填充後運行
+`dehydrate()` | 在 `render()` 後調用，但在元件被脫水化並發送到前端之前
+`dehydrateFoo()` | 在名為 $foo 的屬性被脫水化前運行
+`updating()` | 在更新 Livewire 元件數據之前運行 (使用 wire:model，不直接在 PHP 內部)
+`updated($field, $newValue)` | 在屬性更新後調用
+`updatingFoo()` | 在名為 $foo 的屬性更新前運行
+`updatedFoo($newValue)` | 在 "foo" 屬性更新後調用
+`updatingFooBar()` | 在更新 $foo 屬性上的嵌套屬性 bar 前運行
+`updatedFooBar($newValue)` | 在 "foo" 屬性上的嵌套 "bar" 鍵更新後調用
+`render()` | 在 "脫水" 之前調用並為元件渲染 Blade 視圖
 @endcomponent
 
-### Component Class Protected Properties {#component-class-protected-properties}
+### 元件類別保護屬性 {#component-class-protected-properties}
 
-Livewire provides core functionality through protected properties on a component's class. Most of these have corresponding methods by the same name if you prefer to return values in a method, rather than declare them as properties.
+Livewire 透過元件類別的保護屬性提供核心功能。如果您更喜歡透過方法返回值，而不是將它們聲明為屬性，則大多數這些屬性都有相應的同名方法。
 
 @component('components.code', ['lang' => 'php'])
 class ShowPost extends Component
@@ -170,17 +170,17 @@ class ShowPost extends Component
 @endcomponent
 
 @component('components.table')
-Name | Description
+名稱 | 說明
 --- | ---
-`$queryString` | Declare which properties to "bind" to the query sting. [Read Docs](/docs/2.x/query-string)
-`$rules` | Specify validation rules to be applied to properties when calling `$this->validate()`. [Read Docs](/docs/2.x/input-validation)
-`$listeners` | Specify which events you want to listen for emitted by other components. [Read Docs](/docs/2.x/events)
-`$paginationTheme` | Specify whether you want to use Tailwind or Bootstrap for you pagination theme. [Read Docs](/docs/2.x/pagination)
+`$queryString` | 聲明要與查詢字串“綁定”的屬性。[閱讀文件](/docs/2.x/query-string)
+`$rules` | 指定在調用 `$this->validate()` 時應用於屬性的驗證規則。[閱讀文件](/docs/2.x/input-validation)
+`$listeners` | 指定您希望聆聽其他元件發出的事件。[閱讀文件](/docs/2.x/events)
+`$paginationTheme` | 指定您希望使用 Tailwind 或 Bootstrap 作為分頁主題。[閱讀文件](/docs/2.x/pagination)
 @endcomponent
 
-### Component Class Traits {#component-class-traits}
+### 元件類別特性 {#component-class-traits}
 
-These are traits that unlock additional functionality in a Livewire component. Usually for features that are considered best as "opt-in".
+這些是在 Livewire 元件中解鎖附加功能的特性。通常用於被視為“選擇加入”的功能。
 
 @component('components.code', ['lang' => 'php'])
 class ShowPost extends Component
@@ -190,13 +190,13 @@ class ShowPost extends Component
 @endcomponent
 
 @component('components.table')
-Name | Description
+名稱 | 說明
 --- | ---
-`WithPagination` | This trait enables Livewire-based pagination instead of Laravel's stock pagination system. [Read Docs](/docs/2.x/pagination)
-`WithFileUploads` | This trait enables adding `wire:model` to an input of `type="file"`. [Read Docs](/docs/2.x/file-uploads)
+`WithPagination` | 此特性啟用基於 Livewire 的分頁，而不是 Laravel 的標準分頁系統。[閱讀文件](/docs/2.x/pagination)
+`WithFileUploads` | 此特性啟用將 `wire:model` 添加到 `type="file"` 的輸入。[閱讀文件](/docs/2.x/file-uploads)
 @endcomponent
 
-### Class Methods {#class-methods}
+### 類別方法 {#class-methods}
 
 @component('components.code', ['lang' => 'php'])
 class PostForm extends Component
@@ -211,34 +211,34 @@ class PostForm extends Component
 @endcomponent
 
 @component('components.table')
-Name | Description
+名稱 | 說明
 --- | ---
-`$this->emit($eventName, ...$params)` | Emit an event to other components on the page
-`$this->emit($eventName, ...$params)->up()` | Emit an event to parent components on the page
-`$this->emit($eventName, ...$params)->self()` | Emit an event only to THIS component
-`$this->emit($eventName, ...$params)->to($componentName)` | Emit an event to any component matching the provided name
-`$this->dispatchBrowserEvent($eventName, ...$params)` | Dispatch a browser event from this component's root element
-`$this->validate()` | Run the validation rules provided in the `$rules` property against the public component properties
-`$this->validate($rules, $messages)` | Run the provided validation rules against the public properties
-`$this->validateOnly($propertyName)` | Run the `$rules` property validation against a specific property provided and not others
-`$this->validateOnly($propertyName, $rules, $messages)` | Run the provided validation rules against a specific property name
-`$this->redirect($url)` | Redirect to a new URL when the Livewire request finishes and reaches the frontend
-`$this->redirectRoute($routeName)` | Redirect to a specific route name
-`$this->skipRender()` | Skip running the `->render()` method for the current request. (Usually for performance reasons)
-`$this->addError($name, $error)` | Add a specific error name and value to the component's error bag manually
-`$this->resetValidation()` | Reset the currently stored validation errors (clear them)
-`$this->fill([...$propertyData])` | Set public property names to provided values in bulk
-`$this->reset()` | Reset all public properties to their initial (pre-mount) state
-`$this->reset($field)` | Reset a specific public property to its pre-mount state
-`$this->reset([...$fields])` | Reset multiple specific properties
-`$this->all()` | Return key->value pairs of property data
-`$this->only([...$propertyNames])` | Return key->value pairs of property data only for a specific set of property names
-`$this->except([...$propertyNames])` | Return key->value pairs of property data except for a specific set of property names
+`$this->emit($eventName, ...$params)` | 向頁面上的其他元件發送事件
+`$this->emit($eventName, ...$params)->up()` | 向頁面上的父元件發送事件
+`$this->emit($eventName, ...$params)->self()` | 僅向此元件發送事件
+`$this->emit($eventName, ...$params)->to($componentName)` | 向與提供的名稱匹配的任何元件發送事件
+`$this->dispatchBrowserEvent($eventName, ...$params)` | 從此元件的根元素發送瀏覽器事件
+`$this->validate()` | 根據 `$rules` 屬性中提供的驗證規則運行對公共元件屬性的驗證
+`$this->validate($rules, $messages)` | 根據提供的驗證規則運行對公共屬性的驗證
+`$this->validateOnly($propertyName)` | 對提供的特定屬性運行 `$rules` 屬性驗證，而不是其他屬性
+`$this->validateOnly($propertyName, $rules, $messages)` | 對特定屬性名運行提供的驗證規則
+`$this->redirect($url)` | 當 Livewire 請求完成並到達前端時，重定向到新的 URL
+`$this->redirectRoute($routeName)` | 重定向到特定路由名
+`$this->skipRender()` | 跳過當前請求的 `->render()` 方法運行（通常出於性能原因）
+`$this->addError($name, $error)` | 手動將特定錯誤名稱和值添加到元件的錯誤包中
+`$this->resetValidation()` | 重置當前存儲的驗證錯誤（清除它們）
+`$this->fill([...$propertyData])` | 批量將公共屬性名設置為提供的值
+`$this->reset()` | 將所有公共屬性重置為它們的初始（掛載前）狀態
+`$this->reset($field)` | 將特定公共屬性重置為其掛載前狀態
+`$this->reset([...$fields])` | 重置多個特定屬性
+`$this->all()` | 返回屬性數據的鍵->值對
+`$this->only([...$propertyNames])` | 僅返回特定一組屬性名的屬性數據的鍵->值對
+`$this->except([...$propertyNames])` | 返回除特定一組屬性名之外的屬性數據的鍵->值對
 @endcomponent
 
-### PHP Testing Methods {#php-testing-methods}
+### PHP 測試方法 {#php-testing-methods}
 
-These are methods available on Livewire's testing helpers. [Read Full Documentation](/docs/2.x/testing)
+這些是 Livewire 測試輔助工具上可用的方法。[閱讀完整文檔](/docs/2.x/testing)
 
 @component('components.code', ['lang' => 'php'])
 public function test()
@@ -251,7 +251,7 @@ public function test()
 @endcomponent
 
 @component('components.table')
-Name |
+名稱 |
 --- |
 `->assertSet($propertyName, $value)` |
 `->assertNotSet($propertyName, $value)` |
@@ -280,40 +280,40 @@ Name |
 `->assertFileDownloaded($filename)` |
 @endcomponent
 
-There are also Laravel testing response helpers available to check the presence of a component on a given page.
+同時還有 Laravel 測試回應輔助工具可用於檢查在給定頁面上組件的存在。
 
 @component('components.table')
-Name |
+名稱 |
 --- |
 `$response->assertSeeLivewire('some-component')` |
 `$response->assertDontSeeLivewire('some-component')` |
 @endcomponent
 
-### Artisan Commands {#artisan-commands}
+### Artisan 指令 {#artisan-commands}
 
-These are the `artisan` commands Livewire makes available to make frequent tasks like creating a component easier.
+這些是 Livewire 提供的 `artisan` 指令，可讓您更輕鬆地執行頻繁任務，如創建組件。
 
 @component('components.table')
-Name | Params | Description
---- | ---
-`artisan make:livewire` | Create a new component
-`artisan livewire:make` | Create a new component
-`artisan livewire:copy` | Copy a component
-`artisan livewire:move` | Move a component
-`artisan livewire:delete` | Delete a component
-`artisan livewire:touch` | Alias for `livewire:make`
-`artisan livewire:cp` | Alias for `livewire:copy`
-`artisan livewire:mv` | Alias for `livewire:move`
-`artisan livewire:rm` | Alias for `livewire:delete`
-`artisan livewire:stubs` | Publish Livewire stubs (used in the above commands) for local modification
-`artisan livewire:publish` | Publish Livewire's config file to your project (`config/livewire.php`)
-`artisan livewire:publish --assets` | Publish Livewire's config file AND its frontend assets to your project
-`artisan livewire:configure-s3-upload-cleanup` | Configure your cloud disk driver's S3 bucket to clear temporary uploads after 24 hours
+名稱 | 參數 | 描述
+--- | --- | ---
+`artisan make:livewire` | 創建新組件
+`artisan livewire:make` | 創建新組件
+`artisan livewire:copy` | 複製組件
+`artisan livewire:move` | 移動組件
+`artisan livewire:delete` | 刪除組件
+`artisan livewire:touch` | `livewire:make` 的別名
+`artisan livewire:cp` | `livewire:copy` 的別名
+`artisan livewire:mv` | `livewire:move` 的別名
+`artisan livewire:rm` | `livewire:delete` 的別名
+`artisan livewire:stubs` | 發布 Livewire 樣板（用於上述指令中）以進行本地修改
+`artisan livewire:publish` | 將 Livewire 的配置文件發布到您的專案（`config/livewire.php`）
+`artisan livewire:publish --assets` | 將 Livewire 的配置文件和前端資源發布到您的專案
+`artisan livewire:configure-s3-upload-cleanup` | 配置您的雲磁碟驅動器的 S3 存儲桶以在 24 小時後清除臨時上傳
 @endcomponent
 
-### PHP Lifecycle Hooks {#php-lifecycle-hooks}
+### PHP 生命周期掛勾 {#php-lifecycle-hooks}
 
-These are hooks provided by Livewire in PHP for listening to lifecycle occurences at a global level (not at a component level). These are used internally to provide a significant portion of Livewire's core functionality, and can be used in ServiceProviders to further extend Livewire yourself.
+這些是 Livewire 在 PHP 中提供的掛勾，用於在全局層面監聽生命週期事件（而不是在組件層面）。這些在內部使用，為 Livewire 的核心功能提供了重要部分，並且可以在 ServiceProviders 中使用來進一步擴展 Livewire。
 
 @component('components.code', ['lang' => 'php'])
 Livewire::listen('component.hydrate', function ($component, $request) {
@@ -322,14 +322,14 @@ Livewire::listen('component.hydrate', function ($component, $request) {
 @endcomponent
 
 @component('components.table')
-Name | Params | Description
+名稱 | 參數 | 描述
 --- | ---
-`component.hydrate` | `($component, $request)` | Run on EVERY component hydration
-`component.hydrate.initial` | `($component, $request)` | Run only on the INITIAL hydration (When the component is first loaded)
-`component.hydrate.subsequent` | `($component, $request)` | Run only AFTER the initial component request
-`component.dehydrate` | `($component, $response)` | Run on EVERY component dehydration
-`component.dehydrate.initial` | `($component, $response)` | Run only on the INITIAL dehydration (When the component is first loaded)
-`component.dehydrate.subsequent` | `($component, $response)` | Run on dehydrate AFTER the initial component request
-`property.hydrate` | `($name, $value, $component, $request)` | Run when a specific property is hydrated
-`property.dehydrate` | `($name, $value, $component, $response)` | Run when a specific property is dehydrated
+`component.hydrate` | `($component, $request)` | 在每次組件水合時運行
+`component.hydrate.initial` | `($component, $request)` | 僅在初始水合時運行（當組件首次加載時）
+`component.hydrate.subsequent` | `($component, $request)` | 僅在初始組件請求後運行
+`component.dehydrate` | `($component, $response)` | 在每次組件脫水時運行
+`component.dehydrate.initial` | `($component, $response)` | 僅在初始脫水時運行（當組件首次加載時）
+`component.dehydrate.subsequent` | `($component, $response)` | 在初始組件請求後運行脫水
+`property.hydrate` | `($name, $value, $component, $request)` | 當特定屬性被水合時運行
+`property.dehydrate` | `($name, $value, $component, $response)` | 當特定屬性被脫水時運行
 @endcomponent

@@ -1,23 +1,23 @@
-* [Introduction](#introduction)
+* [簡介](#introduction)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire offers the ability to "prefetch" the result of an action on mouseover. Toggling display content is a common use case.
+Livewire 提供了在滑鼠懸停時“預取”動作結果的能力。切換顯示內容是一個常見的使用案例。
 
 @component('components.warning')
-This is useful for cases when an action DOES NOT (like writing to session or database) perform side effects. If the action you are "pre-fetching" has side-effects, the side-effects will be unpredictably executed.
+這在以下情況下很有用：當一個動作並不執行（例如寫入到 session 或資料庫）副作用時。如果您正在“預取”的動作具有副作用，則這些副作用將不可預測地被執行。
 @endcomponent
 
-Add the `prefetch` modifier to an action to enable this behavior:
+將 `prefetch` 修飾符添加到動作中以啟用此行為：
 
 @component('components.code')
 @verbatim
-<button wire:click.prefetch="toggleContent">Show Content</button>
+<button wire:click.prefetch="toggleContent">顯示內容</button>
 
 @if ($contentIsVisible)
-    <span>Some Content...</span>
+    <span>一些內容...</span>
 @endif
 @endverbatim
 @endcomponent
 
-Now, when the mouse enters the "Show Content" button, Livewire will fetch the result of the "toggleContent" action in the background. If the button is actually clicked, it will display the content on the page without sending another network request. If the button is NOT clicked, the prefetched response will be thrown away.
+現在，當滑鼠進入“顯示內容”按鈕時，Livewire 將在後台提取“toggleContent”動作的結果。如果實際點擊按鈕，它將在頁面上顯示內容，而無需發送另一個網絡請求。如果未單擊按鈕，則預取的響應將被丟棄。

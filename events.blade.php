@@ -1,35 +1,35 @@
-* [Firing Events](#firing-events)
-  * [From The Template](#from-template)
-  * [From The Component](#from-component)
-  * [From Global JavaScript](#from-js)
-* [Event Listeners](#event-listeners)
-* [Passing Parameters](#passing-parameters)
-* [Scoping Events](#scoping-events)
-  * [Scoping To Parent Listeners](#scope-to-parents)
-  * [Scoping To Components By Name](#scope-by-name)
-  * [Scoping To Self](#scope-to-self)
-* [Listening For Events In JavaScript](#in-js)
-* [Dispatching Browser Events](#browser)
+* [觸發事件](#firing-events)
+  * [從模板中觸發](#from-template)
+  * [從元件中觸發](#from-component)
+  * [從全域 JavaScript 中觸發](#from-js)
+* [事件監聽器](#event-listeners)
+* [傳遞參數](#passing-parameters)
+* [事件範圍](#scoping-events)
+  * [限定到父監聽器](#scope-to-parents)
+  * [按名稱限定到元件](#scope-by-name)
+  * [限定到自身](#scope-to-self)
+* [在 JavaScript 中監聽事件](#in-js)
+* [分派瀏覽器事件](#browser)
 
-Livewire components can communicate with each other through a global event system. As long as two Livewire components are living on the same page, they can communicate using events and listeners.
+Livewire 元件可以通過全域事件系統彼此通訊。只要兩個 Livewire 元件存在於同一頁面上，它們就可以使用事件和監聽器進行通訊。
 
-## Firing Events {#firing-events}
+## 觸發事件 {#firing-events}
 
-There are multiple ways to fire events from Livewire components.
+從 Livewire 元件中觸發事件有多種方法。
 
-### Method A: From The Template {#from-template}
+### 方法 A: 從模板中觸發 {#from-template}
 
 @component('components.code')
 <button wire:click="$emit('postAdded')">
 @endcomponent
 
-### Method B: From The Component {#from-component}
+### 方法 B: 從元件中觸發 {#from-component}
 
 @component('components.code', ['lang' => 'php'])
 $this->emit('postAdded');
 @endcomponent
 
-### Method C: From Global JavaScript {#from-js}
+### 方法 C: 從全域 JavaScript 中觸發 {#from-js}
 
 @component('components.code', ['lang' => 'javascript'])
 <script>
@@ -37,10 +37,10 @@ $this->emit('postAdded');
 </script>
 @endcomponent
 
-## Event Listeners {#event-listeners}
-Event listeners are registered in the `$listeners` property of your Livewire components.
+## 事件監聽器 {#event-listeners}
+事件監聽器在您的 Livewire 元件的 `$listeners` 屬性中註冊。
 
-Listeners are a key->value pair where the key is the event to listen for, and the value is the method to call on the component.
+監聽器是一個鍵值對，其中鍵是要監聽的事件，值是要在元件上調用的方法。
 
 @component('components.code', ['lang' => 'php'])
 class ShowPosts extends Component
@@ -56,13 +56,13 @@ class ShowPosts extends Component
 }
 @endcomponent
 
-Now when any other component on the page emits a `postAdded` event, this component will pick it up and fire the `incrementPostCount` method on itself.
+現在，當頁面上的任何其他元件發出 `postAdded` 事件時，此元件將接收到並執行自身的 `incrementPostCount` 方法。
 
 @component('components.tip')
-If the name of the event and the method you're calling match, you can leave out the key. For example: <code>protected $listeners = ['postAdded'];</code> will call the <code>postAdded</code> method when the <code>postAdded</code> event is emitted.
+如果事件的名稱和您要調用的方法匹配，則可以省略鍵。例如：<code>protected $listeners = ['postAdded'];</code> 將在發出 <code>postAdded</code> 事件時調用 <code>postAdded</code> 方法。
 @endcomponent
 
-If you need to name event listeners dynamically, you can substitute the `$listeners` property for the `getListeners()` protected method on the component:
+如果您需要動態命名事件監聽器，您可以將 `$listeners` 屬性替換為元件上的 `getListeners()` 受保護方法：
 
 @component('components.code-component')
 @slot('class')
@@ -81,12 +81,12 @@ class ShowPosts extends Component
 @endcomponent
 
 @component('components.warning')
-<code>getListeners()</code> will only dynamically generate the names of listeners when the component is mounted. Once the listeners are setup, these can't be changed.
+<code>getListeners()</code> 只會在元件掛載時動態生成監聽器的名稱。一旦監聽器設置完成，就無法更改。
 @endcomponent
 
-## Passing Parameters {#passing-parameters}
+## 傳遞引數 {#passing-parameters}
 
-You can also send parameters with an event emission.
+您也可以在事件發射時傳遞引數。
 
 @component('components.code', ['lang' => 'php'])
 $this->emit('postAdded', $post->id);
@@ -110,12 +110,12 @@ class ShowPosts extends Component
 @endslot
 @endcomponent
 
-## Scoping Events {#scoping-events}
+## 事件範圍 {#scoping-events}
 
-### Scoping To Parent Listeners {#scope-to-parents}
-When dealing with [nested components](nesting-components), sometimes you may only want to emit events to parents and not children or sibling components.
+### 限定到父監聽器 {#scope-to-parents}
+在處理 [巢狀元件](nesting-components) 時，有時您可能只想將事件發射給父元件，而不是子元件或同層元件。
 
-In these cases, you can use the `emitUp` feature:
+在這些情況下，您可以使用 `emitUp` 功能：
 
 @component('components.code', ['lang' => 'php'])
 $this->emitUp('postAdded');
@@ -125,10 +125,10 @@ $this->emitUp('postAdded');
 <button wire:click="$emitUp('postAdded')">
 @endcomponent
 
-### Scoping To Components By Name {#scope-by-name}
-Sometimes you may only want to emit an event to other components of the same type.
+### 限定到特定元件 {#scope-by-name}
+有時您可能只想將事件發射給相同類型的其他元件。
 
-In these cases, you can use `emitTo`:
+在這些情況下，您可以使用 `emitTo`：
 
 @component('components.code', ['lang' => 'php'])
 $this->emitTo('counter', 'postAdded');
@@ -138,12 +138,13 @@ $this->emitTo('counter', 'postAdded');
 <button wire:click="$emitTo('counter', 'postAdded')">
 @endcomponent
 
-(Now, if the button is clicked, the "postAdded" event will only be emitted to `counter` components)
+(現在，如果按下按鈕，"postAdded" 事件將只發射到 `counter` 元件)
 
-### Scoping To Self {#scope-to-self}
-Sometimes you may only want to emit an event on the component that fired the event.
 
-In these cases, you can use `emitSelf`:
+### 將範圍限定為自身 {#scope-to-self}
+有時您可能只想在觸發事件的元件上發出事件。
+
+在這些情況下，您可以使用 `emitSelf`：
 
 @component('components.code', ['lang' => 'php'])
 $this->emitSelf('postAdded');
@@ -153,46 +154,46 @@ $this->emitSelf('postAdded');
 <button wire:click="$emitSelf('postAdded')">
 @endcomponent
 
-(Now, if the button is clicked, the "postAdded" event will only be emitted to the instance of the component that it was emitted from.)
+（現在，如果按下按鈕，"postAdded" 事件將僅發送到發出該事件的元件實例。）
 
-## Listening For Events In JavaScript {#in-js}
+## 在 JavaScript 中監聽事件 {#in-js}
 
-Livewire allows you to register event listeners in JavaScript like so:
+Livewire 允許您像這樣在 JavaScript 中註冊事件監聽器：
 
 @component('components.code', ['lang' => 'javascript'])
 <script>
 Livewire.on('postAdded', postId => {
-    alert('A post was added with the id of: ' + postId);
+    alert('已新增帖子，其 ID 為：' + postId);
 })
 </script>
 @endcomponent
 
 @component('components.tip')
-This feature is actually incredibly powerful. For example, you could register a listener to show a toaster (popup) inside your app when Livewire performs certain actions. This is one of the many ways to bridge the gap between PHP and JavaScript with Livewire.
+實際上，這個功能非常強大。例如，您可以註冊一個監聽器，在 Livewire 執行某些操作時在應用程式內顯示一個彈出式視窗。這是將 PHP 與 JavaScript 之間的差距彌合的眾多方法之一。
 @endcomponent
 
-## Dispatching Browser Events {#browser}
+## 發送瀏覽器事件 {#browser}
 
-Livewire allows you to fire browser window events like so:
+Livewire 允許您像這樣觸發瀏覽器視窗事件：
 
 @component('components.code', ['lang' => 'php'])
 $this->dispatchBrowserEvent('name-updated', ['newName' => $value]);
 @endcomponent
 
-You are able to listen for this window event with JavaScript:
+您可以使用 JavaScript 監聽此視窗事件：
 
 @component('components.code', ['lang' => 'javascript'])
 <script>
 window.addEventListener('name-updated', event => {
-    alert('Name updated to: ' + event.detail.newName);
+    alert('名稱已更新為：' + event.detail.newName);
 })
 </script>
 @endcomponent
 
-AlpineJS allows you to easily listen for these window events within your HTML:
+AlpineJS 允許您在 HTML 內輕鬆監聽這些視窗事件：
 
 @component('components.code', ['lang' => 'blade'])
 <div x-data="{ open: false }" @name-updated.window="open = false">
-    <!-- Modal with a Livewire name update form -->
+    <!-- 具有 Livewire 名稱更新表單的模態對話框 -->
 </div>
 @endcomponent

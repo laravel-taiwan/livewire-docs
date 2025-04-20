@@ -1,19 +1,19 @@
-* [Install Livewire](#install-livewire)
-* [Create a component](#create-a-component)
-* [Include the component](#include-the-component)
-* [View it in the browser](#view-in-browser)
-* [Add "counter" functionality](#add-counter)
-* [View it in the browser](#view-in-browser-finally)
+* [安裝 Livewire](#install-livewire)
+* [建立元件](#create-a-component)
+* [包含元件](#include-the-component)
+* [在瀏覽器中檢視](#view-in-browser)
+* [新增 "counter" 功能](#add-counter)
+* [在瀏覽器中檢視](#view-in-browser-finally)
 
-## Install Livewire {#install-livewire}
+## 安裝 Livewire {#install-livewire}
 
-Include the PHP.
+包含 PHP。
 
 @component('components.code', ['lang' => 'shell'])
 composer require livewire/livewire
 @endcomponent
 
-Include the JavaScript (on every page that will be using Livewire).
+包含 JavaScript（在每個將使用 Livewire 的頁面上）。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -29,15 +29,15 @@ Include the JavaScript (on every page that will be using Livewire).
 @endverbatim
 @endcomponent
 
-## Create a component {#create-a-component}
+## 建立元件 {#create-a-component}
 
-Run the following command to generate a new Livewire component called `counter`.
+執行以下命令以生成名為 `counter` 的新 Livewire 元件。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire counter
 @endcomponent
 
-Running this command will generate the following two files:
+執行此命令將生成以下兩個文件：
 
 @component('components.code-component', [
     'className' => 'app/Http/Livewire/Counter.php',
@@ -67,10 +67,10 @@ class Counter extends Component
 @endslot
 @endcomponent
 
-Let's add some text to the view so we can see something tangible in the browser.
+讓我們在視圖中添加一些文本，以便在瀏覽器中看到一些具體的內容。
 
 @component('components.tip')
-Livewire components MUST have a single root element.
+Livewire 元件必須具有單一根元素。
 @endcomponent
 
 @component('components.code-component', [
@@ -85,9 +85,9 @@ Livewire components MUST have a single root element.
 @endslot
 @endcomponent
 
-## Include the component {#include-the-component}
+## 包含元件 {#include-the-component}
 @verbatim
-Think of Livewire components like Blade includes. You can insert `<livewire:some-component />` anywhere in a Blade view and it will render.
+將 Livewire 元件視為 Blade 包含。您可以在 Blade 視圖中的任何位置插入 `<livewire:some-component />`，它將呈現。
 @endverbatim
 
 @component('components.code', ['lang' => 'blade'])
@@ -99,21 +99,14 @@ Think of Livewire components like Blade includes. You can insert `<livewire:some
 <body>
     <livewire:counter /> {{-- [tl! highlight] --}}
 
-    ...
 
-    @livewireScripts
-</body>
-</html>
-@endverbatim
-@endcomponent
+## 在瀏覽器中查看 {#view-in-browser}
 
-## View it in the browser {#view-in-browser}
+在瀏覽器中載入您包含 Livewire 的頁面。您應該會看到 "Hello World!"。
 
-Load the page you included Livewire on in the browser. You should see "Hello World!".
+## 添加 "counter" 功能 {#add-counter}
 
-## Add "counter" functionality {#add-counter}
-
-Replace the generated content of the `counter` component class and view with the following:
+將 `counter` 組件類別和視圖的生成內容替換為以下內容：
 
 @component('components.code-component', [
     'className' => 'app/Http/Livewire/Counter.php',
@@ -147,10 +140,10 @@ class Counter extends Component
 @endslot
 @endcomponent
 
-## View it in the browser {#view-in-browser-finally}
+## 在瀏覽器中查看 {#view-in-browser-finally}
 
-Now reload the page in the browser, you should see the `counter` component rendered. If you click the "+" button, the page should automatically update without a page reload. Magic 🧙‍♂.️
+現在在瀏覽器中重新載入頁面，您應該會看到 `counter` 組件已呈現。如果您點擊 "+" 按鈕，頁面應該會在無需重新載入頁面的情況下自動更新。魔法 🧙‍♂️。
 
 @component('components.tip')
-In general, something as trivial as this "counter" is more suited for something like AlpineJS, however it's one of the best ways to easily understand the way Livewire works.
+一般來說，像 "counter" 這樣的事情更適合使用 AlpineJS 之類的工具，但這是最容易理解 Livewire 工作方式的最佳方式之一。
 @endcomponent

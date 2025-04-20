@@ -1,64 +1,64 @@
-* [Installation](#installation)
-* [Using Alpine Inside Of Livewire](#alpine-in-livewire)
-* [Extracting Reusable Blade Components](#extracting-blade-components)
-* [Interacting With Livewire From Alpine: `$wire`](#interacting-with-livewire-from-alpine)
-* [Sharing State Between Livewire And Alpine: @verbatim`@entangle`@endverbatim](#sharing-state)
-* [Using the `@verbatim@js@endverbatim` directive](#js-directive)
-* [Accessing Livewire Directives From Blade Components](#livewire-directives-from-blade-components)
-* [Creating A DatePicker Component](#creating-a-datepicker)
-* [Forwarding `wire:model` `input` Events](#forwarding-wire-model-input-events)
-* [Ignoring DOM-changes (using `wire:ignore`)](#ignoring-dom-changes)
+* [安裝](#installation)
+* [在 Livewire 內使用 Alpine](#alpine-in-livewire)
+* [提取可重複使用的 Blade 元件](#extracting-blade-components)
+* [從 Alpine 與 Livewire 互動：`$wire`](#interacting-with-livewire-from-alpine)
+* [在 Livewire 與 Alpine 之間共享狀態：@verbatim`@entangle`@endverbatim](#sharing-state)
+* [使用 `@verbatim@js@endverbatim` 指示詞](#js-directive)
+* [從 Blade 元件存取 Livewire 指示詞](#livewire-directives-from-blade-components)
+* [建立日期選擇器元件](#creating-a-datepicker)
+* [轉發 `wire:model` `input` 事件](#forwarding-wire-model-input-events)
+* [忽略 DOM 變更（使用 `wire:ignore`）](#ignoring-dom-changes)
 
-There are lots of instances where a page interaction doesn't warrant a full server-roundtrip, like toggling a modal.
+有許多情況下，頁面互動並不需要完整的伺服器往返，例如切換模態對話框。
 
-For these cases, AlpineJS is the perfect companion to Livewire.
+對於這些情況，AlpineJS 是 Livewire 的完美搭檔。
 
-It allows you to sprinkle JavaScript behavior directly into your markup in a declarative/reactive way that should feel very similar to VueJS (If that's what you're used to).
+它允許您以一種聲明性/反應性的方式將 JavaScript 行為直接灑在您的標記中，這應該感覺非常類似於 VueJS（如果您習慣使用它）。
 
-## Installation {#installation}
+## 安裝 {#installation}
 
-You must install Alpine in order to use it with Livewire.
+您必須安裝 Alpine 才能與 Livewire 一起使用。
 
-To install Alpine in your project, add the following script tag to the `<head>` section of your layout file.
+要在您的專案中安裝 Alpine，請將以下腳本標籤添加到您的版面檔案的 `<head>` 部分。
 
 @component('components.code', ['lang' => 'blade', 'id' => 'js-inject-alpine-version'])
 <head>
     ...
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- The "defer" attribute is important to make sure Alpine waits for Livewire to load first. -->
+    <!-- "defer" 屬性很重要，以確保 Alpine 等待 Livewire 先載入。 -->
 </head>
 @endcomponent
 
-For more installation information, visit the [Alpine Docs](https://alpinejs.dev/essentials/installation).
+有關更多安裝信息，請參閱[Alpine 文件](https://alpinejs.dev/essentials/installation)。
 
-## Using Alpine Inside Of Livewire {#alpine-in-livewire}
+## 在 Livewire 內使用 Alpine {#alpine-in-livewire}
 
-Here's an example of using AlpineJS for "dropdown" functionality INSIDE a Livewire component's view.
+以下是在 Livewire 元件視圖內使用 AlpineJS 進行「下拉」功能的示例。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     ...
 
     <div x-data="{ open: false }">
-        <button @click="open = true">Show More...</button>
+        <button @click="open = true">顯示更多...</button>
 
         <ul x-show="open" @click.outside="open = false">
-            <li><button wire:click="archive">Archive</button></li>
-            <li><button wire:click="delete">Delete</button></li>
+            <li><button wire:click="archive">歸檔</button></li>
+            <li><button wire:click="delete">刪除</button></li>
         </ul>
     </div>
 </div>
 @endcomponent
 
-## Extracting Reusable Blade Components {#extracting-blade-components}
+## 提取可重複使用的 Blade 元件 {#extracting-blade-components}
 
-If you are not already used to each tool on its own, mixing the syntaxes of both can be a bit confusing.
+如果您尚未熟悉每個工具本身，混合兩者的語法可能會有點混亂。
 
-Because of this, when possible, you should extract the Alpine parts to reusable Blade components for consumption inside of Livewire (and anywhere in your app).
+因此，如果可能的話，您應該將 Alpine 部分提取為可重複使用的 Blade 元件，以便在 Livewire 內（以及應用程式中的任何地方）使用。
 
-Here is an example (Using Laravel 7 Blade component tag syntax).
+這裡是一個範例（使用 Laravel 7 Blade 元件標記語法）。
 
-**The Livewire View:**
+**Livewire 檢視：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div>
@@ -78,7 +78,7 @@ Here is an example (Using Laravel 7 Blade component tag syntax).
 @endverbatim
 @endcomponent
 
-**The Reusable "dropdown" Blade Component:**
+**可重複使用的 "dropdown" Blade 元件：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div x-data="{ open: false }">
@@ -91,13 +91,13 @@ Here is an example (Using Laravel 7 Blade component tag syntax).
 @endverbatim
 @endcomponent
 
-Now, the Livewire and Alpine syntaxes are completely separate, AND you have a reusable Blade component to use from other components.
+現在，Livewire 和 Alpine 的語法完全分開，而且您有一個可從其他元件中使用的可重複使用的 Blade 元件。
 
-## Interacting With Livewire From Alpine: `$wire` {#interacting-with-livewire-from-alpine}
+## 從 Alpine 與 Livewire 互動：`$wire` {#interacting-with-livewire-from-alpine}
 
-From any Alpine component inside a Livewire component, you can access a magic `$wire` object to access and manipulate the Livewire component.
+從 Livewire 元件內的任何 Alpine 元件，您可以訪問一個神奇的 `$wire` 物件，以訪問和操作 Livewire 元件。
 
-To demonstrate its usage, we'll create a "counter" component in Alpine that uses Livewire completely under the hood:
+為了展示其用法，我們將在 Alpine 中創建一個完全在 Livewire 內部使用的 "counter" 元件：
 
 @component('components.code-component')
 @slot('class')
@@ -116,7 +116,7 @@ class Counter extends Component
 @slot('view')
 @verbatim
 <div>
-    <!-- Alpine Counter Component -->
+    <!-- Alpine 計數器元件 -->
     <div x-data>
         <h1 x-text="$wire.count"></h1>
 
@@ -127,45 +127,45 @@ class Counter extends Component
 @endslot
 @endcomponent
 
-Now, when a user clicks "Increment", the standard Livewire round trip will trigger and Alpine will reflect Livewire's new `$count` value.
+當使用者點擊「增加」時，標準的 Livewire 回程將觸發，Alpine 將反映 Livewire 的新 `$count` 值。
 
-Because `$wire` uses a [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) under the hood, you are able to access properties on it and call methods on it and those operations will be forwarded to Livewire. In addition to this functionality, `$wire` also has standard, built-in methods available to you.
+因為 `$wire` 在幕後使用 [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)，您可以訪問其上的屬性並調用其上的方法，這些操作將被轉發到 Livewire。除了這個功能外，`$wire` 還有一些標準的內建方法可供您使用。
 
-Here is the full API for `$wire`:
+以下是 `$wire` 的完整 API：
 
 @component('components.code', ['lang' => 'javascript'])
-// Accessing a Livewire property
+// 存取 Livewire 屬性
 $wire.foo
 
-// Calling a Livewire method
+// 呼叫 Livewire 方法
 $wire.someMethod(someParam)
 
-// Calling a Livewire method and doing something with its result
+// 呼叫 Livewire 方法並處理其結果
 $wire.someMethod(someParam)
     .then(result => { ... })
 
-// Calling a Livewire method and storing its response using async/await
+// 呼叫 Livewire 方法並使用 async/await 儲存其回應
 let foo = await $wire.getFoo()
 
-// Emitting a Livewire event called "some-event" with two parameters
+// 發送名為 "some-event" 的 Livewire 事件，帶有兩個參數
 $wire.emit('some-event', 'foo', 'bar')
 
-// Listening for a Livewire event emitted called "some-event"
+// 監聽名為 "some-event" 的 Livewire 事件
 $wire.on('some-event', (foo, bar) => {})
 
-// Getting a Livewire property
+// 取得 Livewire 屬性
 $wire.get('property')
 
-// Setting a Livewire property to a specific value
+// 將 Livewire 屬性設置為特定值
 $wire.set('property', value)
 
-// Defer setting a Livewire property to a specific value
+// 延遲將 Livewire 屬性設置為特定值
 $wire.set('property', value, true)
 
-// Calling a Livewire action
+// 呼叫 Livewire 動作
 $wire.call('someMethod', param)
 
-// Uploading file and setting Livewire property
+// 上傳檔案並設置 Livewire 屬性
 $wire.upload(
     'property',
     file,
@@ -174,7 +174,7 @@ $wire.upload(
     progressCallback = (event) => {}
 )
 
-// Uploading multiple files and setting Livewire property
+// 上傳多個檔案並設置 Livewire 屬性
 $wire.uploadMultiple(
     'property',
     files,
@@ -183,7 +183,7 @@ $wire.uploadMultiple(
     progressCallback = (event) => {}
 )
 
-// Removing (one of) uploaded file(s) and updating Livewire property
+// 移除已上傳的檔案之一並更新 Livewire 屬性
 $wire.removeUpload(
     'property',
     uploadedFilename,
@@ -191,14 +191,14 @@ $wire.removeUpload(
     errorCallback = () => {}
 )
 
-// Accessing the underlying Livewire component JavaScript instance
+// 存取底層 Livewire 元件的 JavaScript 實例
 $wire.__instance
 @endcomponent
 
-## Sharing State Between Livewire And Alpine: @verbatim`@entangle`@endverbatim {#sharing-state}
-Livewire has an incredibly powerful feature called "entangle" that allows you to "entangle" a Livewire and Alpine property together. With entanglement, when one value changes, the other will also be changed.
+## 在 Livewire 和 Alpine 之間共享狀態：@verbatim`@entangle`@endverbatim {#sharing-state}
+Livewire 具有一個非常強大的功能，稱為 "entangle"，允許您將 Livewire 和 Alpine 的屬性 "entangle" 在一起。通過 entanglement，當一個值變化時，另一個值也會跟著變化。
 
-To demonstrate, consider the dropdown example from before, but now with its `showDropdown` property entangled between Livewire and Alpine. By using entanglement, we are now able to control the state of the dropdown from both Alpine AND Livewire.
+為了演示，考慮之前的下拉示例，但現在將其 `showDropdown` 屬性在 Livewire 和 Alpine 之間進行了 entangle。通過使用 entanglement，我們現在能夠從 Alpine 和 Livewire 同時控制下拉的狀態。
 
 @component('components.code-component')
 @slot('class')
@@ -224,20 +224,20 @@ class Dropdown extends Component
 @slot('view')
 @verbatim
 <div x-data="{ open: @entangle('showDropdown') }">
-    <button @click="open = true">Show More...</button>
+    <button @click="open = true">顯示更多...</button>
 
     <ul x-show="open" @click.outside="open = false">
-        <li><button wire:click="archive">Archive</button></li>
-        <li><button wire:click="delete">Delete</button></li>
+        <li><button wire:click="archive">歸檔</button></li>
+        <li><button wire:click="delete">刪除</button></li>
     </ul>
 </div>
 @endverbatim
 @endslot
 @endcomponent
 
-Now a user can toggle on the dropdown immediately with Alpine, but when they click a Livewire action like "Archive", the dropdown will be told to close from Livewire. Both Alpine and Livewire are welcome to manipulate their respective properties, and the other will automatically update.
+現在用戶可以立即使用 Alpine 切換下拉，但當他們點擊 Livewire 的 "歸檔" 等操作時，下拉將從 Livewire 那裡被告知關閉。Alpine 和 Livewire 都可以操縱各自的屬性，另一方將自動更新。
 
-Sometimes, it isn't necessary to update Livewire on every Alpine change, and you'd rather bundle the change with the next Livewire request that goes out. In these cases, you can chain on a `.defer` property like so:
+有時，不需要在每次 Alpine 更改時更新 Livewire，您可能更願意將更改與下一個 Livewire 請求捆綁在一起。在這些情況下，您可以像這樣鏈接一個 `.defer` 屬性：
 
 @component('components.code', ['lang' => 'javascript'])
 @verbatim
@@ -246,13 +246,13 @@ Sometimes, it isn't necessary to update Livewire on every Alpine change, and you
 @endverbatim
 @endcomponent
 
-Now, when a user toggles the dropdown open and closed, there will be no AJAX requests sent for Livewire, HOWEVER, when a Livewire action is triggered from a button like "archive" or "delete", the new state of "showDropdown" will be bundled along with the request.
+現在，當用戶打開和關閉下拉時，不會發送 Livewire 的 AJAX 請求，但是當從像 "archive" 或 "delete" 這樣的按鈕觸發 Livewire 操作時，"showDropdown" 的新狀態將與請求一起捆綁。
 
-If you are having trouble following this difference. Open your browser's devtools and observe the difference in XHR requests with and without `.defer` added.
+如果您在遵循這個差異時遇到困難。打開您瀏覽器的開發者工具，觀察添加`.defer`和不添加`.defer`時的XHR請求的差異。
 
-## Using the `@verbatim@js@endverbatim` directive {#js-directive}
+## 使用 `@verbatim@js@endverbatim` 指示詞 {#js-directive}
 
-If ever you need to output PHP data for use in Alpine, you can now use the `@verbatim@js@endverbatim` directive.
+如果您需要輸出 PHP 數據以供 Alpine 使用，現在可以使用 `@verbatim@js@endverbatim` 指示詞。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -262,32 +262,32 @@ If ever you need to output PHP data for use in Alpine, you can now use the `@ver
 @endverbatim
 @endcomponent
 
-## Accessing Livewire Directives From Blade Components {#livewire-directives-from-blade-components}
-Extracting re-usable Blade components within your Livewire application is an essential pattern.
+## 從 Blade 元件中訪問 Livewire 指示 {#livewire-directives-from-blade-components}
+在 Livewire 應用程序中提取可重用的 Blade 元件是一種基本模式。
 
-One difficulty you might encounter while implementing Blade components within a Livewire context is accessing the value of attributes like `wire:model` from inside the component.
+在 Livewire 上下文中實現 Blade 元件時可能遇到的一個困難是從元件內部訪問像 `wire:model` 這樣的屬性值。
 
-For example, you might create a text input Blade component like so:
+例如，您可以像這樣創建一個文本輸入 Blade 元件：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
-<!-- Usage -->
+<!-- 使用 -->
 <x-inputs.text wire:model="foo"/>
 
-<!-- Definition -->
+<!-- 定義 -->
 <div>
     <input type="text" {{ $attributes }}>
 </div>
 @endverbatim
 @endcomponent
 
-A simple Blade component like this will work perfectly fine. Laravel and Blade will automatically forward any extra attributes added to the component (like `wire:model` in this case), and place them on the `<input>` tag because we echoed out the attribute bag (`$attributes`).
+這樣一個簡單的 Blade 元件將完美地運作。Laravel 和 Blade 將自動將添加到元件的任何額外屬性（在這種情況下是 `wire:model`）轉發並放置在 `<input>` 標籤上，因為我們輸出了屬性包（`$attributes`）。
 
-However, sometimes you might need to extract more detailed information about Livewire attributes passed to the component.
+但是，有時您可能需要提取有關傳遞給元件的 Livewire 屬性的更詳細信息。
 
-For these cases, Livewire offers an `$attributes->wire()` method to help with these tasks.
+對於這些情況，Livewire 提供了一個 `$attributes->wire()` 方法來幫助處理這些任務。
 
-Given the following Blade Component usage:
+考慮以下 Blade 元件的使用情況：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -295,7 +295,7 @@ Given the following Blade Component usage:
 @endverbatim
 @endcomponent
 
-You could access Livewire directive information from Blade's `$attribute` bag like so:
+您可以這樣從 Blade 的 `$attribute` 包中訪問 Livewire 指示信息：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -303,33 +303,28 @@ $attributes->wire('model')->value(); // "foo"
 $attributes->wire('model')->modifiers(); // ["defer"]
 $attributes->wire('model')->hasModifier('defer'); // true
 
+```php
 $attributes->wire('loading')->hasModifier('class'); // true
 $attributes->wire('loading')->value(); // "opacity-25"
-@endverbatim
-@endcomponent
+```
 
-You can also "forward" these Livewire directives individually. For example:
+您也可以單獨“轉發”這些 Livewire 指示詞。例如：
 
-@component('components.code', ['lang' => 'blade'])
-@verbatim
+```blade
 <!-- Given -->
 <x-inputs.text wire:model.defer="foo" wire:loading.class="opacity-25"/>
 
-<!-- You could forward the "wire:model.defer="foo" directive like so: -->
+<!-- 您可以像這樣轉發“wire:model.defer="foo" 指示詞： -->
 <input type="text" {{ $attributes->wire('model') }}>
 
-<!-- The output would be: -->
+<!-- 輸出將是： -->
 <input type="text" wire:model.defer="foo">
-@endverbatim
-@endcomponent
+```
 
-@verbatim
-There are LOTS of different ways to use this utility, but one common example is using it in conjunction with the aforementioned `@entangle` directive:
-@endverbatim
+有很多不同的方法可以使用此實用工具，但一個常見的示例是與上述的 `@entangle` 指示詞一起使用：
 
-@component('components.code', ['lang' => 'blade'])
-@verbatim
-<!-- Usage -->
+```blade
+<!-- 使用 -->
 <x-dropdown wire:model="show">
     <x-slot name="trigger">
         <button>Show</button>
@@ -338,7 +333,7 @@ There are LOTS of different ways to use this utility, but one common example is 
     Dropdown Contents
 </x-dropdown>
 
-<!-- Definition -->
+<!-- 定義 -->
 <div x-data="{ open: @entangle($attributes->wire('model')) }">
     <span @click="open = true">{{ $trigger }}</span>
 
@@ -346,40 +341,38 @@ There are LOTS of different ways to use this utility, but one common example is 
         {{ $slot }}
     </div>
 </div>
-@endverbatim
-@endcomponent
+```
 
-@verbatim
-> Note: If the `.defer` modifier is passed via `wire:model.defer`, the `@entangle` directive will automatically recognize it and add the `@entangle('...').defer` modifier under the hood.
-@endverbatim
+> 注意：如果通過 `wire:model.defer` 傳遞了 `.defer` 修飾符，`@entangle` 指示詞將自動識別它並在幕後添加 `@entangle('...').defer` 修飾符。
 
-## Creating A DatePicker Component {#creating-a-datepicker}
+## 創建日期選擇器元件 {#creating-a-datepicker}
 
-A common use case for JavaScript inside Livewire is custom form inputs. Things like datepickers, color-pickers, etc... are often essential to your app.
+在 Livewire 中使用 JavaScript 的常見用例是自定義表單輸入。像日期選擇器、顏色選擇器等通常對您的應用程序至關重要。
 
-By using the same pattern above, (and adding some extra sauce), we can utilize Alpine to make interacting with these types of JavaScript components a breeze.
+通過使用上面的相同模式（並添加一些額外的功能），我們可以利用 Alpine 輕鬆地與這些類型的 JavaScript 元件進行交互。
 
-Let's create a re-usable Blade component called `date-picker` that we can use to bind some data to in Livewire using `wire:model`.
+讓我們創建一個名為 `date-picker` 的可重複使用的 Blade 元件，我們可以在 Livewire 中使用 `wire:model` 將一些數據綁定到其中。
 
-Here's how we will be using it:
+這是我們將如何使用它的方式：
 
-@component('components.code', ['lang' => 'blade'])
-@verbatim
+```blade
 <form wire:submit.prevent="schedule">
-    <label for="title">Event Title</label>
+    <label for="title">活動標題</label>
     <input wire:model="title" id="title" type="text">
+```  
 
-    <label for="date">Event Date</label>
-    <x-date-picker wire:model="date" id="date"/>
+```html
+<label for="date">活動日期</label>
+<x-date-picker wire:model="date" id="date"/>
 
-    <button>Schedule Event</button>
+<button>安排活動</button>
 </form>
 @endverbatim
 @endcomponent
 
-For this component we will be using the [Pikaday](https://github.com/Pikaday/Pikaday) library.
+對於這個元件，我們將使用[Pikaday](https://github.com/Pikaday/Pikaday)函式庫。
 
-According to the docs, the most basic usage of the package (after including the assets) looks like this:
+根據文件，套件的最基本用法（在包含資源檔之後）如下所示：
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -391,11 +384,11 @@ According to the docs, the most basic usage of the package (after including the 
 @endverbatim
 @endcomponent
 
-All you need is an `<input>` element, and Pikaday will add all the extra date-picker behavior for you.
+您只需要一個`<input>`元素，Pikaday將為您添加所有額外的日期選擇器行為。
 
-Now let's see how we might write a re-usable Blade component for this library.
+現在讓我們看看如何為這個函式庫編寫一個可重複使用的Blade元件。
 
-**The `date-picker` Reusable Blade Component:**
+**`date-picker`可重複使用的Blade元件：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <input
@@ -408,29 +401,28 @@ Now let's see how we might write a re-usable Blade component for this library.
 @endverbatim
 @endcomponent
 
-> Note: The @verbatim {{ $attributes }} @endverbatim expression is a mechanism in Laravel 7 and above to forward extra HTML attributes declared on the component tag.
+> 注意：@verbatim {{ $attributes }} @endverbatim 表達式是Laravel 7及以上版本中的一種機制，用於轉發在元件標籤上聲明的額外HTML屬性。
 
-## Forwarding `wire:model` `input` Events {#forwarding-wire-model-input-events}
+## 轉發`wire:model` `input`事件 {#forwarding-wire-model-input-events}
 
-Under the hood, `wire:model` adds an event listener to update a property every time the `input` event is dispatched on or under the element. Another way to communicate between Livewire and Alpine is by using Alpine to dispatch an `input` event with some data within or on an element with `wire:model` on it.
+在幕後，`wire:model`會添加一個事件監聽器，以便在元素上或下派發`input`事件時每次更新屬性。另一種在Livewire和Alpine之間通信的方式是使用Alpine在具有`wire:model`的元素中或上派發帶有某些數據的`input`事件。
 
-Let's create a contrived example where when a user clicks the first button a property called `$foo` is set to `bar`, and when a user clicks the second button, `$foo` is set to `baz`.
+讓我們創建一個虛構的例子，當用戶點擊第一個按鈕時，一個名為`$foo`的屬性設置為`bar`，當用戶點擊第二個按鈕時，`$foo`設置為`baz`。
 
-**Within A Livewire Component's View:**
+**在Livewire元件的視圖中：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div>
     <div wire:model="foo">
-        <button x-data @click="$dispatch('input', 'bar')">Set to "bar"</button>
-        <button x-data @click="$dispatch('input', 'baz')">Set to "baz"</button>
+        <button x-data @click="$dispatch('input', 'bar')">設置為"bar"</button>
+        <button x-data @click="$dispatch('input', 'baz')">設置為"baz"</button>
     </div>
 </div>
 @endverbatim
 @endcomponent
+```
 
-A more real-world example would be creating a "color-picker" Blade component that might be consumed inside a Livewire component.
-
-**Color-picker Component Usage:**
+**使用Color-picker元件：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div>
@@ -439,11 +431,11 @@ A more real-world example would be creating a "color-picker" Blade component tha
 @endverbatim
 @endcomponent
 
-For the component definition, we will be using a third-party color-picker lib called [Vanilla Picker](https://vanilla-picker.js.org/).
+對於元件定義，我們將使用一個名為[Vanilla Picker](https://vanilla-picker.js.org/)的第三方顏色選擇器庫。
 
-This sample assumes you have it loaded on the page.
+此示例假設您已在頁面上載入它。
 
-**Color-picker Blade Component Definition (Un-commented):**
+**Color-picker Blade元件定義（未註解）：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div
@@ -464,47 +456,47 @@ This sample assumes you have it loaded on the page.
 @endverbatim
 @endcomponent
 
-**Color-picker Blade Component Definition (Commented):**
+**Color-picker Blade元件定義（已註解）：**
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div
     x-data="{ color: '#ffffff' }"
     x-init="
-        // Wire up to show the picker when clicking the 'Change' button.
+        // 連接以在點擊“Change”按鈕時顯示選擇器。
         picker = new Picker($refs.button);
-        // Run this callback every time a new color is picked.
+        // 每次選擇新顏色時運行此回調函式。
         picker.onDone = rawColor => {
-            // Set the Alpine 'color' property.
+            // 設置Alpine的“color”屬性。
             color = rawColor.hex;
-            // Dispatch the color property for 'wire:model' to pick up.
+            // 發送顏色屬性以供“wire:model”接收。
             $dispatch('input', color)
         }
     "
-    // Vanilla Picker will attach its own DOM inside this element, so we need to
-    // add `wire:ignore` to tell Livewire to skip DOM-diffing for it.
+    // Vanilla Picker將在此元素內附加自己的DOM，因此我們需要
+    // 添加`wire:ignore`以告訴Livewire跳過對其進行DOM差異比較。
     wire:ignore
-    // Forward the any attributes added to the component tag like `wire:model=color`
+    // 轉發添加到元件標記的任何屬性，如`wire:model=color`
     {{ $attributes }}
 >
-    <!-- Show the current color value with the backgound color set to the chosen color. -->
+    <!-- 顯示當前顏色值，背景顏色設置為所選顏色。 -->
     <span x-text="color" :style="`background: ${color}`"></span>
-    <!-- When this button is clicked, the color-picker dialogue is shown. -->
+    <!-- 點擊此按鈕時，將顯示顏色選擇對話框。 -->
     <button x-ref="button">Change</button>
 </div>
 @endverbatim
 @endcomponent
 
-## Ignoring DOM-changes (using `wire:ignore`) {#ignoring-dom-changes}
+## 忽略 DOM 變更（使用 `wire:ignore`） {#ignoring-dom-changes}
 
-Fortunately a library like Pikaday adds its extra DOM at the end of the page. Many other libraries manipulate the DOM as soon as they are initialized and continue to mutate the DOM as you interact with them.
+幸運的是，像 Pikaday 這樣的函式庫會將其額外的 DOM 添加到頁面末尾。許多其他函式庫在初始化時立即操控 DOM，並在與其互動時持續變更 DOM。
 
-When this happens, it's hard for Livewire to keep track of what DOM manipulations you want to preserve on component updates, and which you want to discard.
+當發生這種情況時，Livewire 很難追蹤您希望在元件更新時保留的 DOM 操作，以及您希望丟棄的 DOM 操作。
 
-To tell Livewire to ignore changes to a subset of HTML within your component, you can add the `wire:ignore` directive.
+要告訴 Livewire 忽略元件內部某個 HTML 子集的變更，您可以添加 `wire:ignore` 指示詞。
 
-The Select2 library is one of those libraries that takes over its portion of the DOM (it replaces your `<select>` tag with lots of custom markup).
+Select2 函式庫就是其中一個接管其 DOM 部分的函式庫（它會用大量自定義標記替換您的 `<select>` 標記）。
 
-Here is an example of using the Select2 library inside a Livewire component to demonstrate the usage of `wire:ignore`.
+以下是在 Livewire 元件中使用 Select2 函式庫的示例，以演示 `wire:ignore` 的使用。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
@@ -515,7 +507,7 @@ Here is an example of using the Select2 library inside a Livewire component to d
             <option value="WY">Wyoming</option>
         </select>
 
-        <!-- Select2 will insert its DOM here. -->
+        <!-- Select2 將在此處插入其 DOM。 -->
     </div>
 </div>
 
@@ -530,5 +522,5 @@ Here is an example of using the Select2 library inside a Livewire component to d
 @endcomponent
 
 @component('components.tip')
-Also, note that sometimes it's useful to ignore changes to an element, but not its children. If this is the case, you can add the <code>self</code> modifier to the <code>wire:ignore</code> directive, like so: <code>wire:ignore.self</code>.
+此外，有時忽略對元素的更改但不忽略其子元素是有用的。如果是這種情況，您可以將 `self` 修飾符添加到 `wire:ignore` 指示詞中，如下所示：`wire:ignore.self`。
 @endcomponent

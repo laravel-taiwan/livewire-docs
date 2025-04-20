@@ -1,8 +1,8 @@
-* [Introduction](#introduction)
+* [簡介](#introduction)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-To authorize actions in Livewire, you can use the `AuthorizesRequests` trait in any component, then call `$this->authorize()` like you normally would inside a controller. For example:
+在 Livewire 中授權操作，您可以在任何元件中使用 `AuthorizesRequests` 取值器，然後像在控制器中一樣呼叫 `$this->authorize()`。例如：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -28,7 +28,8 @@ class EditPost extends \Livewire\Component
 }
 @endverbatim
 @endcomponent
-If you use a different guard to authenticate your users then also add an entry to middleware_group in the livewire config file:
+
+如果您使用不同的警衛來驗證您的使用者，那麼也將一個條目添加到 livewire 組態檔中的 middleware_group：
 @component('components.code', ['lang' => 'php'])
 @verbatim
 ...

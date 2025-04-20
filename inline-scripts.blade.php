@@ -1,19 +1,19 @@
-* [Introduction](#introduction)
-* [Using the `@verbatim@js@endverbatim` directive](#using-js-directive)
-* [Accessing the JavaScript component instance](#accessing-javascript-component-instance)
+* [簡介](#introduction)
+* [使用 `@verbatim@js@endverbatim` 指示詞](#using-js-directive)
+* [存取 JavaScript 元件實例](#accessing-javascript-component-instance)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire recommends that you use AlpineJS for most of your JavaScript needs, but it does support using `<script>` tags directly inside your component's view.
+Livewire 建議您大部分的 JavaScript 需求使用 AlpineJS，但它也支援直接在元件視圖中使用 `<script>` 標籤。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <div>
-    <!-- Your components HTML -->
+    <!-- 您的元件 HTML -->
 
     <script>
         document.addEventListener('livewire:load', function () {
-            // Your JS here.
+            // 在此放置您的 JS
         })
     </script>
 </div>
@@ -21,61 +21,63 @@ Livewire recommends that you use AlpineJS for most of your JavaScript needs, but
 @endcomponent
 
 @component('components.warning')
-Please note that your scripts will be run only once upon the first render of the component. If you need to run a JavaScript function later - emit the event from the component and listen to it in JavaScript as described <a href="https://laravel-livewire.com/docs/events/">here</a>)
+請注意，您的腳本將僅在元件首次渲染時運行一次。如果您需要稍後運行 JavaScript 函數 - 請從元件發出事件並在 JavaScript 中監聽，如<a href="https://laravel-livewire.com/docs/events/">此處</a>所述。
 @endcomponent
 
-You can also push scripts directly onto Blade stacks from your Livewire component:
+您還可以直接從 Livewire 元件將腳本推送到 Blade 堆疊中：
 
 @component('components.code', ['lang' => 'javascript'])
 @verbatim
-<!-- Your component's view here -->
+<!-- 您的元件視圖這裡 -->
 
 @push('scripts')
 <script>
-    // Your JS here.
+    // 在此放置您的 JS
 </script>
 @endpush
 @endverbatim
 @endcomponent
 
-## Using the `@verbatim@js@endverbatim` directive {#using-js-directive}
+## 使用 `@verbatim@js@endverbatim` 指示詞 {#using-js-directive}
 
-If ever you need to output PHP data for use in Javascript, you can now use the `@verbatim@js@endverbatim` directive.
+如果您需要將 PHP 資料輸出供 JavaScript 使用，現在可以使用 `@verbatim@js@endverbatim` 指示詞。
 
 @component('components.code', ['lang' => 'blade'])
 @verbatim
 <script>
     let posts = @js($posts)
     
-    // "posts" will now be a JavaScript array of post data from PHP.
+    // "posts" 現在將是來自 PHP 的文章資料的 JavaScript 陣列。
 </script>
 @endverbatim
 @endcomponent
 
-## Accessing the JavaScript component instance {#accessing-javascript-component-instance}
+## 存取 JavaScript 元件實例 {#accessing-javascript-component-instance}
 
-Because Livewire has both a PHP AND a JavaScript portion, each component also has a JavaScript object. You can access this object using the special `@@this` blade directive in your component's view.
+因為 Livewire 同時具有 PHP 和 JavaScript 部分，每個元件也有一個 JavaScript 物件。您可以在元件視圖中使用特殊的 `@@this` blade 指示詞來存取此物件。
 
-Here's an example:
+這是一個範例：
 
 @component('components.code', ['lang' => 'javascript'])
 @verbatim
 <script>
     document.addEventListener('livewire:load', function () {
-        // Get the value of the "count" property
+        // 獲取 "count" 屬性的值
         var someValue = @this.count
 
-        // Set the value of the "count" property
+```html
+        // 設定 "count" 屬性的值
         @this.count = 5
 
-        // Call the increment component action
+        // 呼叫增加元件行為
         @this.increment()
 
-        // Run a callback when an event ("foo") is emitted from this component
+        // 當從此元件發出事件 ("foo") 時運行回呼
         @this.on('foo', () => {})
     })
 </script>
 @endverbatim
 @endcomponent
 
-> Note: the `@@this` directive compiles to the following string for JavaScript to interpret: "Livewire.find([component-id])"
+> 注意：`@@this` 指示詞編譯為以下字串，供 JavaScript 解釋使用："Livewire.find([component-id])"
+```

@@ -1,16 +1,16 @@
-* [Toggling classes on "dirty" elements](#toggling-classes)
-* [Toggling elements](#toggling-elements)
-* [Toggling classes on other elements](#toggling-classes)
+* [在“髒”元素上切換類](#toggling-classes)
+* [切換元素](#toggling-elements)
+* [在其他元素上切換類](#toggling-classes)
 
-There are cases where it may be useful to provide feedback that content has changed and is not yet in-sync with the back-end Livewire component.
+有些情況下，提供反饋以指示內容已更改並尚未與後端 Livewire 元件同步可能很有用。
 
-For input that uses `wire:model`, or `wire:model.lazy`, you may want to display that a field is 'dirty' until Livewire has fully updated.
+對於使用 `wire:model` 或 `wire:model.lazy` 的輸入，您可能希望顯示該字段在 Livewire 完全更新之前是“髒”的。
 
-## Toggling classes on "dirty" elements {#toggling-classes}
+## 在“髒”元素上切換類 {#toggling-classes}
 
-Elements with the `wire:dirty` directive will watch for differences between the front-end value, and the last returned Livewire data value.
+具有 `wire:dirty` 指示詞的元素將監視前端值與上次返回的 Livewire 數據值之間的差異。
 
-Adding the `class` modifier allows you to add a class to the element when dirty.
+添加 `class` 修飾符使您可以在元素“髒”時添加一個類。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
@@ -18,9 +18,9 @@ Adding the `class` modifier allows you to add a class to the element when dirty.
 </div>
 @endcomponent
 
-Now, when a user modifies the input value, the element will receive the `border-red-500` class. The class will be removed again if the input value returns to its original state, or if the Livewire component updates.
+現在，當用戶修改輸入值時，該元素將收到 `border-red-500` 類。如果輸入值恢復到原始狀態，或者 Livewire 元件更新，則該類將再次被移除。
 
-You can also perform the inverse, and remove classes by adding the `.remove` modifier, similar to how `wire:loading` works.
+您也可以執行相反操作，通過添加 `.remove` 修飾符來刪除類，類似於 `wire:loading` 的工作方式。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
@@ -28,30 +28,30 @@ You can also perform the inverse, and remove classes by adding the `.remove` mod
 </div>
 @endcomponent
 
-The `bg-green-200` class will be removed from the input while dirty.
+當元素“髒”時，`bg-green-200` 類將從輸入中被移除。
 
-## Toggling elements {#toggling-elements}
+## 切換元素 {#toggling-elements}
 
-The default behaviour of the `wire:dirty` directive without modifiers is that the element will be hidden until dirty. This can create a paradox if used on the input itself, but like loading states, the `dirty` directive can be used to toggle the appearance of other elements using `wire:target`
+`wire:dirty` 指示詞的默認行為（無修飾符）是該元素將在“髒”之前被隱藏。如果在輸入本身上使用，這可能會造成一個悖論，但與加載狀態一樣，`dirty` 指示詞可以用於使用 `wire:target` 切換其他元素的外觀。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <span wire:dirty wire:target="foo">Updating...</span>
+    <span wire:dirty wire:target="foo">更新中...</span>
     <input wire:model.lazy="foo">
 </div>
 @endcomponent
 
-In this example, the `span` will be hidden by default, and only visible when the input element is dirty.
+在此示例中，`span` 默誵情況下將被隱藏，僅在輸入元素“髒”時可見。
 
-## Toggling classes on other elements {#toggling-classes}
+## 切換其他元素的類別 {#toggling-classes}
 
-The class and attribute modifiers can be used in the same way for referenced elements
+類別和屬性修改器可以以相同的方式用於參考元素
 
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <label wire:dirty.class="text-red-500" wire:target="foo">Full Name</label>
+    <label wire:dirty.class="text-red-500" wire:target="foo">全名</label>
     <input wire:model.lazy="foo">
 </div>
 @endcomponent
 
-Now, when the `input` is dirty, the label text will receive the `text-red-500` class.
+現在，當 `input` 變為 dirty 時，標籤文字將獲得 `text-red-500` 類別。

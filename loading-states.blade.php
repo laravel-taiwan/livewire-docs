@@ -1,32 +1,32 @@
-* [Introduction](#introduction)
-* [Toggling elements during "loading" states](#toggling-elements)
-* [Delaying loading indicator](#delaying-loading)
-* [Targeting specific actions](#targeting-actions)
-* [Targeting models](#targeting-models)
-* [Toggling classes](#toggling-classes)
-* [Toggling attributes](#toggling-attributes)
+* [簡介](#introduction)
+* [在“載入”狀態下切換元素](#toggling-elements)
+* [延遲載入指示器](#delaying-loading)
+* [針對特定操作](#targeting-actions)
+* [針對模型](#targeting-models)
+* [切換類別](#toggling-classes)
+* [切換屬性](#toggling-attributes)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Because Livewire makes a roundtrip to the server every time an action is triggered on the page, there are cases when the page may not react immediately to a user event (like a click). Livewire allows you to easily display loading states, which can make your app feel more responsive.
+由於 Livewire 每次在頁面上觸發操作時都會與伺服器來回傳輸，因此在某些情況下，頁面可能無法立即對使用者事件（如點擊）做出反應。Livewire 允許您輕鬆顯示載入狀態，這可以使您的應用程式感覺更具有回應性。
 
-## Toggling elements during "loading" states {#toggling-elements}
+## 在“載入”狀態下切換元素 {#toggling-elements}
 
-Elements with the `wire:loading` directive are only visible while waiting for actions to complete (network requests).
+具有 `wire:loading` 指示詞的元素僅在等待操作完成時可見（網路請求）。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <button wire:click="checkout">Checkout</button>
+    <button wire:click="checkout">結帳</button>
 
     <div wire:loading>
-        Processing Payment...
+        處理付款中...
     </div>
 </div>
 @endcomponent
 
-When the "Checkout" button is clicked, the "Processing Payment..." message will show. When the action is finished, the message will disappear.
+當點擊“結帳”按鈕時，將顯示“處理付款中...”訊息。當操作完成時，該訊息將消失。
 
-By default, Livewire set's a loading element's "display" CSS property to "inline-block". If you want Livewire to use "flex" or "grid", you can use the following modifiers.
+預設情況下，Livewire 將載入元素的 “display” CSS 屬性設置為 “inline-block”。如果您希望 Livewire 使用 “flex” 或 “grid”，您可以使用以下修飾符。
 
 @component('components.code', ['lang' => 'blade'])
 <div wire:loading.block>...</div>
@@ -37,27 +37,28 @@ By default, Livewire set's a loading element's "display" CSS property to "inline
 <div wire:loading.table>...</div>
 @endcomponent
 
-You can also "hide" an element during a loading state using the `.remove` modifier.
+您還可以使用 `.remove` 修飾符在載入狀態下“隱藏”元素。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <button wire:click="checkout">Checkout</button>
+    <button wire:click="checkout">結帳</button>
 
     <div wire:loading.remove>
-        Hide Me While Loading...
+        載入時隱藏我...
     </div>
 </div>
 @endcomponent
 
-## Delaying loading indicator {#delaying-loading}
+## 延遲載入指示器 {#delaying-loading}
 
-If you want to avoid flickering because loading is very fast, you can add the `.delay` modifier, and it will only show up if loading takes longer than `200ms`.
+如果您想要避免閃爍，因為載入非常快，您可以添加 `.delay` 修飾符，只有在載入時間超過 `200ms` 時才會顯示。
 
+```blade
 @component('components.code', ['lang' => 'blade'])
 <div wire:loading.delay>...</div>
 @endcomponent
 
-If you wish, you can customize the delay duration with the following modifiers:
+如果需要，您可以使用以下修飾符自定義延遲時間：
 
 @component('components.code', ['lang' => 'blade'])
 <div wire:loading.delay.shortest>...</div> <!-- 50ms -->
@@ -69,37 +70,37 @@ If you wish, you can customize the delay duration with the following modifiers:
 <div wire:loading.delay.longest>...</div>  <!-- 1000ms -->
 @endcomponent
 
-## Targeting specific actions {#targeting-actions}
+## 針對特定操作進行定位 {#targeting-actions}
 
-The method outlined above works well for simple components. For more complex components, you may want to show loading indicators only for specific actions.
+上面介紹的方法適用於簡單的元件。對於更複雜的元件，您可能希望僅針對特定操作顯示加載指示器。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <button wire:click="checkout">Checkout</button>
-    <button wire:click="cancel">Cancel</button>
+    <button wire:click="checkout">結帳</button>
+    <button wire:click="cancel">取消</button>
 
     <div wire:loading wire:target="checkout">
-        Processing Payment...
+        付款處理中...
     </div>
 </div>
 @endcomponent
 
-In the above example, the loading indicator will be displayed when the "Checkout" button is clicked, but not when the "Cancel" button is clicked.
+在上面的示例中，當點擊“結帳”按鈕時，將顯示加載指示器，但當點擊“取消”按鈕時不會顯示。
 
-`wire:target` can accept multiple arguments in a comma separated format like this: `wire:target="foo, bar"`.
+`wire:target` 可以接受以逗號分隔的多個參數，格式如下：`wire:target="foo, bar"`。
 
-You may also target actions with specific parameters.
+您也可以針對具有特定參數的操作進行定位。
 @component('components.code', ['lang' => 'blade'])
 <div>
-    <button wire:click="update('bob')">Update</button>
+    <button wire:click="update('bob')">更新</button>
 
     <div wire:loading wire:target="update('bob')">
-        Updating Bob...
+        更新 Bob...
     </div>
 </div>
 @endcomponent
 
-If you wish to trigger a loading indicator when ANY of the properties of an array change, you can simply target the entire array:
+如果您希望在陣列的任何屬性更改時觸發加載指示器，您可以簡單地對整個陣列進行定位：
 
 @component('components.code', ['lang' => 'blade'])
 <div>
@@ -108,60 +109,61 @@ If you wish to trigger a loading indicator when ANY of the properties of an arra
     <input type="text" wire:model="post.content">
 
     <div wire:loading wire:target="post">
-        Updating Post...
+        更新文章中...
     </div>
 </div>
 @endcomponent
+```
 
-## Targeting models {#targeting-models}
-In addition to actions, you can also target whenever a `wire:model` is synchronized.
+## 定位模型 {#targeting-models}
+除了動作之外，您還可以在`synchronized`時定位`wire:model`。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     <input wire:model="quantity">
 
     <div wire:loading wire:target="quantity">
-        Updating quantity...
+        更新數量中...
     </div>
 </div>
 @endcomponent
 
-## Toggling classes {#toggling-classes}
+## 切換類別 {#toggling-classes}
 
-You can add or remove classes from an element during loading states, by adding the `.class` modifier to the `wire:loading` directive.
+您可以在加載狀態期間向元素添加或移除類別，只需將`.class`修飾符添加到`wire:loading`指示詞中。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     <button wire:click="checkout" wire:loading.class="bg-gray">
-        Checkout
+        結帳
     </button>
 </div>
 @endcomponent
 
-Now, when the "Checkout" button is clicked, the background will turn gray while the network request is processing.
+現在，當點擊“結帳”按鈕時，背景將變為灰色，同時網絡請求正在處理。
 
-You can also perform the inverse and remove classes by adding the `.remove` modifier.
+您還可以執行相反操作，通過添加`.remove`修飾符來移除類別。
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     <button wire:click="checkout" wire:loading.class.remove="bg-blue" class="bg-blue">
-        Checkout
+        結帳
     </button>
 </div>
 @endcomponent
 
-Now the `bg-blue` class will be removed from the button while loading.
+現在，在加載時，按鈕將移除`bg-blue`類別。
 
-## Toggling attributes {#toggling-attributes}
+## 切換屬性 {#toggling-attributes}
 
-Similar to classes, HTML attributes can be added or removed from elements during loading states:
+與類別類似，HTML屬性可以在加載狀態期間添加或移除元素：
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     <button wire:click="checkout" wire:loading.attr="disabled">
-        Checkout
+        結帳
     </button>
 </div>
 @endcomponent
 
-Now, when the "Checkout" button is clicked, the `disabled="true"` attribute will be added to the element while loading.
+現在，當點擊“結帳”按鈕時，元素將添加`disabled="true"`屬性。

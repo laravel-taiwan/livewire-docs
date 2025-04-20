@@ -1,8 +1,8 @@
-* [Introduction](#introduction)
+* [簡介](#introduction)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-You may want to redirect from inside a Livewire component to another page in your app. Livewire supports the standard redirect response syntax you are used to using in Laravel controller.
+您可能希望從 Livewire 元件內部重新導向到應用程式中的另一個頁面。Livewire 支援您在 Laravel 控制器中習慣使用的標準重新導向回應語法。
 
 @component('components.code-component')
 @slot('class')
@@ -23,16 +23,16 @@ class ContactForm extends Component
 @slot('view')
 @verbatim
 <div>
-    Email: <input wire:model="email">
+    電子郵件： <input wire:model="email">
 
-    <button wire:click="addContact">Submit</button>
+    <button wire:click="addContact">提交</button>
 </div>
 @endverbatim
 @endslot
 @endcomponent
 
-Now, after the user clicks "Submit" and their contact is added to the database, they will be redirected to the success page (`/contact-form-success`).
+現在，當使用者點擊「提交」並將其聯絡資料新增到資料庫後，他們將被重新導向到成功頁面 (`/contact-form-success`)。
 
 @component('components.tip')
-Because Livewire works with Laravel's redirection system, you can use any notation you are used to like <code>redirect('/foo')</code>, <code>redirect()->to('/foo')</code>, <code>redirect()->route('foo')</code>.
+由於 Livewire 與 Laravel 的重新導向系統配合工作，您可以使用任何您習慣的表示法，如 <code>redirect('/foo')</code>、<code>redirect()->to('/foo')</code>、<code>redirect()->route('foo')</code>。
 @endcomponent

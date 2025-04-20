@@ -1,26 +1,26 @@
-* [Introduction](#introduction)
-* [Inline Components](#inline-components)
+* [簡介](#introduction)
+* [內嵌元件](#inline-components)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Run the following artisan command to create a new Livewire component:
+執行以下 Artisan 指令以建立新的 Livewire 元件：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire ShowPosts
 @endcomponent
 
-Livewire also supports "kebab" notation for new components.
+Livewire 也支援新元件的 "kebab" 表記法。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire show-posts
 @endcomponent
 
-Two new files were created in your project:
+在您的專案中建立了兩個新檔案：
 
 * `app/Http/Livewire/ShowPosts.php`
 * `resources/views/livewire/show-posts.blade.php`
 
-If you wish to create components within sub-folders, you can use the following different syntaxes:
+如果您希望在子資料夾中建立元件，您可以使用以下不同的語法：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire Post\\Show
@@ -28,31 +28,31 @@ php artisan make:livewire Post/Show
 php artisan make:livewire post.show
 @endcomponent
 
-Now, the two created files will be in sub-folders:
+現在，兩個建立的檔案將位於子資料夾中：
 
 * `app/Http/Livewire/Post/Show.php`
 * `resources/views/livewire/post/show.blade.php`
 
-### Generating Tests {#generating-tests}
+### 產生測試 {#generating-tests}
 
-Optionally, you can include the `--test` flag when creating a component, and a test file will be created for you as well.
+選擇性地，在建立元件時，您可以包含 `--test` 標誌，這樣也會為您建立一個測試檔案。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire ShowPosts --test
 @endcomponent
 
-## Inline Components {#inline-components}
-If you wish to create Inline components (Components without `.blade.php` files), you can add the `--inline` flag to the command:
+## 內嵌元件 {#inline-components}
+如果您希望建立內嵌元件（沒有 `.blade.php` 檔案的元件），您可以在指令中加入 `--inline` 標誌：
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire ShowPosts --inline
 @endcomponent
 
-Now, only one file will be created:
+現在，只會建立一個檔案：
 
 * `app/Http/Livewire/ShowPosts.php`
 
-Here's what it would look like:
+這是它的樣子：
 
 @component('components.code', ['lang' => 'php'])
 @verbatim

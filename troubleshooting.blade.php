@@ -1,31 +1,31 @@
-* [Dom Diffing Issues](#dom-diffing-issues)
-    * [Symptoms](#dom-diffing-symptoms)
-    * [Cures](#dom-diffing-cures)
-* [Checksum Issues](#checksum-issues)
-* [Query String Issues](#query-string-issues)
-    * [Symptoms](#query-string-symptoms)
-    * [Cures](#query-string-cures)
-* [Root Element Issues](#root-element-issues)
-    * [Symptoms](#root-element-symptoms)
-    * [Cures](#root-element-cures)
+* [DOM差異問題](#dom-diffing-issues)
+    * [症狀](#dom-diffing-symptoms)
+    * [治療方法](#dom-diffing-cures)
+* [校驗和校驗和校驗問題](#checksum-issues)
+* [查詢字串問題](#query-string-issues)
+    * [症狀](#query-string-symptoms)
+    * [治療方法](#query-string-cures)
+* [根元素問題](#root-element-issues)
+    * [症狀](#root-element-symptoms)
+    * [治療方法](#root-element-cures)
 
 
-## Dom Diffing Issues {#dom-diffing-issues}
+## DOM差異問題 {#dom-diffing-issues}
 
-The most common issues encountered by Livewire users has to do with Livewire's DOM diffing/patching system. This is the system that selectively updates elements that have been changed, added, or removed after every component update.
+Livewire使用者最常遇到的問題之一與Livewire的DOM差異/修補系統有關。這是一個系統，它在每次元件更新後選擇性地更新已更改、新增或移除的元素。
 
-For the most part, this system is reliable, but there are certain cases where Livewire is unable to properly track changes. When this happens, hopefully, a helpful error will be thrown and you can debug with the following guide.
+在大多數情況下，這個系統是可靠的，但有些情況下，Livewire無法正確追踪變化。當發生這種情況時，希望會拋出一個有用的錯誤，您可以根據以下指南進行調試。
 
-### Symptoms {#dom-diffing-symptoms}
-* An input element loses focus
-* An element or group of elements dissapears suddenly
-* A previously interactive element stops responding to user input
-* A loading indicator mis-fires
-* A user action no longer functions
+### 症狀 {#dom-diffing-symptoms}
+* 輸入元素失去焦點
+* 元素或一組元素突然消失
+* 先前互動的元素停止響應用戶輸入
+* 載入指示器誤發
+* 用戶動作不再起作用
 
-### Cures {#dom-diffing-cures}
-* Ensure your component has a single-level root element
-* Add `wire:key` to elements inside loops (the value to `wire:key` must be unique across the page):
+### 治療方法 {#dom-diffing-cures}
+* 確保您的元件具有單層根元素
+* 在循環內的元素上添加 `wire:key`（`wire:key` 的值必須在頁面上是唯一的）：
 @component('components.code')
 @verbatim
 <ul>
@@ -36,21 +36,21 @@ For the most part, this system is reliable, but there are certain cases where Li
 @endverbatim
 @endcomponent
 
-* Add `key()`/`wire:key` to nested components in a loop
+* 在循環中的嵌套元件上添加 `key()`/`wire:key`
 @component('components.code')
 @verbatim
 <ul>
     @foreach ($items as $item)
         @livewire('view-item', ['item' => $item], key('item-'.$item->id))
 
-        <!-- key() using Laravel 7's tag syntax -->
+        <!-- key() 使用 Laravel 7 的標籤語法 -->
         <livewire:view-item :item="$item" :wire:key="'item-'.$item->id">
     @endforeach
 </ul>
 @endverbatim
 @endcomponent
 
-* Wrap Blade conditionals (`@@if`, `@@error`, `@@auth`) in an element
+* 將Blade條件式（`@if`、`@error`、`@auth`）包裹在一個元素中
 @component('components.code')
 @verbatim
 <input type="text" wire:model="name">
@@ -58,11 +58,11 @@ For the most part, this system is reliable, but there are certain cases where Li
 @endverbatim
 @endcomponent
 
-* Add `wire:key`. As a final measure, adding `wire:key` will directly tell Livewire how to keep track of a DOM element. Over-using this attribute is a smell, but it is very useful and powerful for problems of this nature.
+* 添加 `wire:key`。作為最後的措施，添加 `wire:key` 將直接告訴 Livewire 如何追蹤 DOM 元素。過度使用此屬性是一種異味，但對於這種性質的問題非常有用且強大。
 
 @component('components.warning')
 @verbatim
-The value you pass to <code>wire:key</code> must be entirely unique to that page. Meaning that you should prefix it, like <code>wire:key="item-{{ $item->id }}"</code>, and avoid using <code>$loop->index</code> to track the individual elements where you can.
+您傳遞給 <code>wire:key</code> 的值必須在該頁面上完全唯一。這意味著您應該添加前綴，如 <code>wire:key="item-{{ $item->id }}"</code>，並避免使用 <code>$loop->index</code> 來追蹤個別元素。
 @endverbatim
 @endcomponent
 
@@ -71,17 +71,17 @@ The value you pass to <code>wire:key</code> must be entirely unique to that page
 <div wire:key="bar">...</div>
 @endcomponent
 
-## Checksum Issues {#checksum-issues}
+## 校驗和問題 {#checksum-issues}
 
-On every request, Livewire does a "[checksum](https://laravel-livewire.com/docs/security)" but in some cases with arrays, it can throw an exception even when the data inside the array is the same.
+在每個請求中，Livewire 都會進行 "[校驗](https://laravel-livewire.com/docs/security)"，但在某些情況下，對於陣列，即使陣列內的資料相同，也可能會拋出異常。
 
-Because in PHP an array can have keys that are alpha-numeric and numeric keys in the same array and in any order, but Javascript will make an object of it because it doesn't support arrays with keys that are alpha-numeric. When Javascript is creating an object it will also reorder the keys, it will place numeric keys before alpha-numeric keys.
+因為在 PHP 中，一個陣列可以同時具有字母數字和數字鍵，並且可以以任何順序排列，但是 Javascript 會將其轉換為物件，因為它不支援具有字母數字鍵的陣列。當 Javascript 創建物件時，它還會重新排序鍵，將數字鍵放在字母數字鍵之前。
 
-This causes a problem when the JSON is sent back because the "[checksum](https://laravel-livewire.com/docs/security)" will look different.
+這導致一個問題，當 JSON 被發送回來時，因為 "[校驗](https://laravel-livewire.com/docs/security)" 將看起來不同。
 
-Some types (Point, LineString, Polygon, and the Multi- variations) will also fail this checksum.
+某些類型（Point、LineString、Polygon 和 Multi- 變體）也會導致校驗失敗。
 
-So make sure when you have a public property that is an array numeric keys are before alpha-numeric character keys.
+因此，確保當您有一個公共屬性是一個陣列時，數字鍵應該在字母數字字符鍵之前。
 @component('components.code', ['lang' => 'php'])
 @verbatim
 class HelloWorld extends Component
@@ -94,56 +94,56 @@ class HelloWorld extends Component
 @endverbatim
 @endcomponent
 
-## Query String Issues {#query-string-issues}
+## 查詢字串問題 {#query-string-issues}
 
-Livewire is using the site's `referrer` information when setting the query string. This can lead to conflicts when you are adding security headers to your application through the `referrer-policy`.
+當設置查詢字串時，Livewire 使用站點的 `referrer` 資訊。這可能會導致當您通過 `referrer-policy` 向應用程式添加安全標頭時出現衝突。
 
-### Symptoms {#query-string-symptoms}
+### 症狀 {#query-string-symptoms}
 
-* The query string does not get updated at all.
-* The query string does not get updated when the value is empty.
+* 查詢字串根本沒有更新。
+* 當值為空時，查詢字串也不會更新。
 
-### Cures {#query-string-cures}
+### 治療方法 {#query-string-cures}
 
-If you do set security headers, make sure the `referrer-policy` value is set to `same-origin`.
+如果您設置了安全標頭，請確保 `referrer-policy` 的值設置為 `same-origin`。
 
-## Root Element Issues {#root-element-issues}
+## 根元素問題 {#root-element-issues}
 
-Livewire requires that there be only one HTML element at the root of a components blade view.
+Livewire 要求在元件 blade 視圖的根部只有一個 HTML 元素。
 
-Having multiple root elements can mean that parts of your view won't work with Livewire correctly, if at all.
+擁有多個根元素可能意味著您的視圖的某些部分無法正確地與 Livewire 一起運作，甚至根本無法運作。
 
-### Symptoms {#root-element-symptoms}
+### 症狀 {#root-element-symptoms}
 
-* A button isn't triggering a `wire:click`
-* Entering data into an input doesn't trigger a network request
-* Parts of your view aren't updating properly (could also be a [Dom Diffing issue](#dom-diffing-issues), see above)
-* You get an error in your browser console that says `Livewire: Multiple root elements detected. This is not supported.`
-* See below for an example of a component with a button that doesn't work:
+* 按鈕無法觸發 `wire:click`
+* 輸入資料到輸入框不會觸發網路請求
+* 您的視圖的某些部分未正確更新（也可能是 [Dom Diffing 問題](#dom-diffing-issues)，請參見上文）
+* 您在瀏覽器控制台中收到一個錯誤，說明 `Livewire: Multiple root elements detected. This is not supported.`
+* 請參見下方一個無法運作的按鈕範例：
 
 @component('components.code', ['lang' => 'blade'])
 <div>
     Some content
 </div>
 
-<!-- This button isn't working -->
+<!-- 這個按鈕無法運作 -->
 <button wire:click="doSomething">Do Something</button>
 @endcomponent
 
-### Cures {#root-element-cures}
+### 治療方法 {#root-element-cures}
 
-The solution is to ensure that you only have one root HTML element, such as a `<div>`. If you have multiple elements, then wrap everything in a `<div>` or another element that suits your layout.
+解決方法是確保只有一個根 HTML 元素，例如 `<div>`。如果有多個元素，則將所有內容包裹在一個 `<div>` 或適合您的版面配置的其他元素中。
 
-So in our example from above, we have wrapped everything in a `<div>` which gets the button running:
+因此，在上面的示例中，我們將所有內容包裹在一個 `<div>` 中，使按鈕運作：
 
 @component('components.code', ['lang' => 'blade'])
-<div> <!-- Added this wrapping div -->
+<div> <!-- 添加這個包裹 div -->
     <div>
         Some content
     </div>
 
     <button wire:click="doSomething">Do Something</button>
-</div> <!-- Added this closing tag for the wrapping div -->
+</div> <!-- 添加這個包裹 div 的結尾標籤 -->
 @endcomponent
 
-Another cause can be using __construct() inside the Livewire class or a Trait.
+另一個原因可能是在 Livewire 類別或 Trait 內部使用 __construct()。

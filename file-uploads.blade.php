@@ -1,29 +1,29 @@
-* [Basic Upload](#basic-upload)
-  * [Storing Uploaded Files](#storing-files)
-* [Handling Multiple Files](#multiple-files)
-* [File Validation](#file-validation)
-  * [Real-time Validation](#real-time-validation)
-* [Temporary Preview Urls](#preview-urls)
-* [Testing File Uploads](#testing-uploads)
-* [Uploading Directly To Amazon S3](#upload-to-s3)
-  * [Configuring Automatic File Cleanup](#auto-cleanup)
-* [Loading Indicators](#loading-indicators)
-* [Progress Indicators (And All JavaScript Events)](#js-hooks)
-* [JavaScript Upload API](#js-api)
-* [Configuration](#configuration)
-  * [Global Validation](#global-validation)
-  * [Global Middleware](#global-middleware)
-  * [Temporary Upload Directory](#temporary-upload-directory)
+* [基本檔案上傳](#basic-upload)
+  * [儲存上傳的檔案](#storing-files)
+* [處理多個檔案](#multiple-files)
+* [檔案驗證](#file-validation)
+  * [即時驗證](#real-time-validation)
+* [臨時預覽網址](#preview-urls)
+* [測試檔案上傳](#testing-uploads)
+* [直接上傳至 Amazon S3](#upload-to-s3)
+  * [設定自動檔案清理](#auto-cleanup)
+* [載入指示器](#loading-indicators)
+* [進度指示器（以及所有 JavaScript 事件）](#js-hooks)
+* [JavaScript 上傳 API](#js-api)
+* [組態設定](#configuration)
+  * [全域驗證](#global-validation)
+  * [全域中介層](#global-middleware)
+  * [臨時上傳目錄](#temporary-upload-directory)
 
-## Basic File Upload {#basic-upload}
+## 基本檔案上傳 {#basic-upload}
 
-> Note: Your Livewire version must be >= 1.2.0 to use this feature.
+> 注意：您的 Livewire 版本必須 >= 1.2.0 才能使用此功能。
 
-Livewire makes uploading and storing files extremely easy.
+Livewire 讓上傳和儲存檔案變得非常容易。
 
-First, add the `WithFileUploads` trait to your component. Now you can use `wire:model` on file inputs as if they were any other input type and Livewire will take care of the rest.
+首先，將 `WithFileUploads` 特性新增至您的元件。現在您可以在檔案輸入上使用 `wire:model`，就像它們是任何其他輸入類型一樣，Livewire 會為您處理其餘事項。
 
-Here's an example of a simple component that handles uploading a photo:
+以下是一個處理上傳照片的簡單元件範例：
 
 @component('components.code-component')
 @slot('class')
@@ -39,7 +39,7 @@ class UploadPhoto extends Component
     public function save()
     {
         $this->validate([
-            'photo' => 'image|max:1024', // 1MB Max
+            'photo' => 'image|max:1024', // 1MB 最大
         ]);
 
         $this->photo->store('photos');
@@ -54,55 +54,55 @@ class UploadPhoto extends Component
 
     @error('photo') <span class="error">{{ $message }}</span> @enderror
 
-    <button type="submit">Save Photo</button>
+    <button type="submit">儲存照片</button>
 </form>
 @endverbatim
 @endslot
 @endcomponent
 
-From the developer's perspective, handling file inputs is no different than handling any other input type: Add `wire:model` to the `<input>` tag and everything else is taken care of for you.
+從開發者的角度來看，處理檔案輸入與處理任何其他輸入類型沒有任何不同：將 `wire:model` 加入到 `<input>` 標籤中，其他所有事情都會為您處理。
 
-However, there is more happening under the hood to make file uploads work in Livewire. Here's a glimpse at what goes on when a user selects a file to upload:
+然而，在幕後有更多事情發生，以使檔案上傳在 Livewire 中運作。當使用者選擇要上傳的檔案時，以下是一個簡要概述：
 
-1. When a new file is selected, Livewire's JavaScript makes an initial request to the component on the server to get a temporary "signed" upload URL.
-2. Once the URL is received, JavaScript then does the actual "upload" to the signed URL, storing the upload in a temporary directory designated by Livewire and returning the new temporary file's unique hash ID.
-3. Once the file is uploaded and the unique hash ID is generated, Livewire's JavaScript makes a final request to the component on the server telling it to "set" the desired public property to the new temporary file.
-4. Now the public property (in this case `$photo`) is set to the temporary file upload and is ready to be stored or validated at any point.
+1. 當選擇新檔案時，Livewire 的 JavaScript 會向伺服器的元件發出初始請求，以獲取臨時的「簽署」上傳 URL。
+2. 一旦收到 URL，JavaScript 接著將實際的「上傳」操作執行到簽署的 URL，將上傳存儲在由 Livewire 指定的臨時目錄中，並返回新臨時檔案的唯一哈希 ID。
+3. 當檔案上傳完成並生成唯一的哈希 ID 時，Livewire 的 JavaScript 會向伺服器的元件發出最終請求，告訴它將所需的公共屬性「設置」為新的臨時檔案。
+4. 現在公共屬性（在這種情況下為 `$photo`）已設置為臨時檔案上傳，並隨時準備存儲或驗證。
 
-### Storing Uploaded Files {#storing-files}
+### 儲存上傳的檔案 {#storing-files}
 
-The previous example demonstrates the most basic storage scenario: Moving the temporarily uploaded file to the "photos" directory on the app's default filesystem disk.
+前面的範例展示了最基本的儲存情境：將臨時上傳的檔案移動到應用程式預設檔案系統磁碟上的「photos」目錄中。
 
-However, you may want to customize the file name of the stored file, or even specify a specific storage "disk" to store the file on (maybe in an S3 bucket for example).
+然而，您可能希望自訂儲存檔案的檔名，甚至指定特定的儲存「磁碟」以將檔案存儲在其中（例如，可能是在 S3 存儲桶中）。
 
-Livewire honors the same API's Laravel uses for storing uploaded files, so feel free to browse [Laravel's documentation](https://laravel.com/docs/filesystem#file-uploads). However, here are a few common storage scenarios for you:
+Livewire 遵守 Laravel 用於儲存上傳檔案的相同 API，因此請隨時查閱 [Laravel 的文件](https://laravel.com/docs/filesystem#file-uploads)。不過，這裡有一些常見的儲存情境供您參考：
 
 @component('components.code', ['lang' => 'php'])
-// Store the uploaded file in the "photos" directory of the default filesystem disk.
+// 將上傳的檔案儲存在預設檔案系統磁碟上的「photos」目錄中。
 $this->photo->store('photos');
 
-// Store in the "photos" directory in a configured "s3" bucket.
+// 在配置的「s3」存儲桶中的「photos」目錄中儲存。
 $this->photo->store('photos', 's3');
 
-// Store in the "photos" directory with the filename "avatar.png".
+// 在「photos」目錄中以檔名「avatar.png」儲存。
 $this->photo->storeAs('photos', 'avatar');
 
-// Store in the "photos" directory in a configured "s3" bucket with the filename "avatar.png".
+// 在配置的「s3」存儲桶中的「photos」目錄中以檔名「avatar.png」儲存。
 $this->photo->storeAs('photos', 'avatar', 's3');
 
-// Store in the "photos" directory, with "public" visibility in a configured "s3" bucket.
+// 在「photos」目錄中以「public」可見性在配置的「s3」存儲桶中儲存。
 $this->photo->storePublicly('photos', 's3');
 
-// Store in the "photos" directory, with the name "avatar.png", with "public" visibility in a configured "s3" bucket.
+// 在配置的「s3」存儲桶中以「public」可見性將檔案儲存在「photos」目錄中，並命名為「avatar.png」。
 $this->photo->storePubliclyAs('photos', 'avatar', 's3');
 @endcomponent
 
-The methods above should provide enough flexibility for storing the uploaded files exactly how you want to.
+上述方法應該提供足夠的靈活性，以便按照您的需求準確存儲上傳的文件。
 
-## Handling Multiple Files {#multiple-files}
-Livewire handles multiple file uploads automatically by detecting the `multiple` attribute on the `<input>` tag.
+## 處理多個文件 {#multiple-files}
+Livewire 通過檢測 `<input>` 標籤上的 `multiple` 屬性，自動處理多個文件上傳。
 
-Here's an example of a file upload that handles multiple uploads:
+以下是處理多個上傳的文件示例：
 
 @component('components.code-component')
 @slot('class')
@@ -118,7 +118,7 @@ class UploadPhotos extends Component
     public function save()
     {
         $this->validate([
-            'photos.*' => 'image|max:1024', // 1MB Max
+            'photos.*' => 'image|max:1024', // 1MB 最大
         ]);
 
         foreach ($this->photos as $photo) {
@@ -135,23 +135,23 @@ class UploadPhotos extends Component
 
     @error('photos.*') <span class="error">{{ $message }}</span> @enderror
 
-    <button type="submit">Save Photo</button>
+    <button type="submit">保存照片</button>
 </form>
 @endverbatim
 @endslot
 @endcomponent
 
-## File Validation {#file-validation}
-Like you've seen in previous examples, validating file uploads with Livewire is exactly the same as handling file uploads from a standard Laravel controller.
+## 文件驗證 {#file-validation}
+就像您在之前的示例中看到的那樣，使用 Livewire 驗證文件上傳與從標準 Laravel 控制器處理文件上傳完全相同。
 
-> Note: Many of the Laravel validation rules relating to files require access to the file. If you are [uploading directly to S3](#upload-to-s3) these validation rules will fail if the object is not publicly accessible.
+> 注意：許多與文件相關的 Laravel 驗證規則需要訪問文件。如果您正在[直接上傳到 S3](#upload-to-s3)，這些驗證規則將在對象不是公開訪問時失敗。
 
-For more information on Laravel's File Validation utilities, [visit the documentation](https://laravel.com/docs/validation#available-validation-rules).
+有關 Laravel 文件驗證工具的更多信息，[請參閱文檔](https://laravel.com/docs/validation#available-validation-rules)。
 
-### Real-time Validation {#real-time-validation}
-It's possible to validate a user's upload in real-time, BEFORE they press "submit".
+### 實時驗證 {#real-time-validation}
+在用戶按下“提交”之前，實時驗證用戶的上傳是可能的。
 
-Again, you can accomplish this like you would any other input type in Livewire:
+同樣，您可以像在 Livewire 中處理任何其他輸入類型一樣完成這個操作：
 
 @component('components.code-component')
 @slot('class')
@@ -167,44 +167,30 @@ class UploadPhoto extends Component
     public function updatedPhoto()
     {
         $this->validate([
-            'photo' => 'image|max:1024', // 1MB Max
+            'photo' => 'image|max:1024', // 1MB 最大
         ]);
     }
 
+```php
     public function save()
     {
         // ...
     }
 }
-@endverbatim
-@endslot
-@slot('view')
-@verbatim
-<form wire:submit.prevent="save">
-    <input type="file" wire:model="photo">
+```
 
-    @error('photo') <span class="error">{{ $message }}</span> @enderror
+現在，當用戶選擇文件（在 Livewire 上傳文件到臨時目錄後），文件將被驗證，用戶將在提交表單之前收到錯誤。
 
-    <button type="submit">Save Photo</button>
-</form>
-@endverbatim
-@endslot
-@endcomponent
+## 臨時預覽網址 {#preview-urls}
+用戶選擇文件後，您可能希望在用戶提交表單並實際存儲文件之前向他們顯示該文件的預覽。
 
-Now, when user selects a file (After Livewire uploads the file to a temporary directory) the file will be validated and the user will receive an error BEFORE they submit the form.
+Livewire 通過上傳文件的 `->temporaryUrl()` 方法輕鬆實現此功能。
 
-## Temporary Preview Urls {#preview-urls}
-After a user chooses a file, you may want to show them a preview of that file BEFORE they submit the form and actually store the file.
+> 注意：出於安全原因，僅支持圖像上傳的臨時 URL。
 
-Livewire makes this trivial with the `->temporaryUrl()` method on uploaded files.
+以下是帶有圖像預覽的文件上傳示例：
 
-> Note: for security reasons, temporary urls are only supported for image uploads.
-
-Here's an example of a file upload with an image preview:
-
-@component('components.code-component')
-@slot('class')
-@verbatim
+```php
 use Livewire\WithFileUploads;
 
 class UploadPhotoWithPreview extends Component
@@ -225,40 +211,22 @@ class UploadPhotoWithPreview extends Component
         // ...
     }
 }
-@endverbatim
-@endslot
-@slot('view')
-@verbatim
-<form wire:submit.prevent="save">
-    @if ($photo)
-        Photo Preview:
-        <img src="{{ $photo->temporaryUrl() }}">
-    @endif
+```
 
-    <input type="file" wire:model="photo">
+Livewire 將臨時文件存儲在非公共目錄中，因此，沒有簡單的方法可以向用戶公開臨時的公共 URL 以供圖像預覽。
 
-    @error('photo') <span class="error">{{ $message }}</span> @enderror
+Livewire 處理了這種複雜性，通過提供一個臨時的簽名 URL，假裝是上傳的圖像，以便您的頁面可以向用戶顯示某些內容。
 
-    <button type="submit">Save Photo</button>
-</form>
-@endverbatim
-@endslot
-@endcomponent
-
-Livewire stores temporary files in a non-public directory as previously mentioned, therefore, there's no simple way to expose a temporary, public URL to your users for image previewing.
-
-Livewire takes care of this complexity, by providing a temporary, signed URL that pretends to be the uploaded image so that your page can show something to your users.
-
-This URL is protected against showing files in directories above the temporary directory of course and because it's signed temporarily, users can't abuse this URL to preview other files on your system.
+當然，這個 URL 受保護，以防止顯示臨時目錄上方目錄中的文件，並且因為它是臨時簽名的，用戶無法濫用此 URL 來預覽系統中的其他文件。```
 
 @component('components.tip')
-    If you've configured Livewire to use S3 for temporary file storage, calling <code>->temporaryUrl()</code> will generate a temporary, signed URL from S3 directly so that you don't hit your Laravel app server for this preview at all.
+    如果您已配置 Livewire 使用 S3 進行臨時文件存儲，調用 <code>->temporaryUrl()</code> 將直接從 S3 生成臨時簽名 URL，這樣您就完全不需要在 Laravel 應用伺服器上進行此預覽。
 @endcomponent
 
-## Testing File Uploads {#testing-uploads}
-Testing file uploads in Livewire is simple with Laravel's file upload testing helpers.
+## 測試文件上傳 {#testing-uploads}
+在 Livewire 中測試文件上傳非常簡單，使用 Laravel 的文件上傳測試輔助工具。
 
-Here's a complete example of testing the "UploadPhoto" component with Livewire.
+以下是使用 Livewire 測試 "UploadPhoto" 元件的完整示例。
 
 @component('components.code-component', [
     'className' => 'UploadPhotoTest.php',
@@ -282,7 +250,7 @@ public function can_upload_photo()
 @endslot
 @endcomponent
 
-Here's a snippet of the "UploadPhoto" component required to make the previous test pass:
+以下是使前面的測試通過所需的 "UploadPhoto" 元件片段：
 
 @component('components.code-component', [
     'className' => 'UploadPhoto.php',
@@ -306,18 +274,18 @@ class UploadPhoto extends Component
 @endslot
 @endcomponent
 
-For more specifics on testing file uploads, reference [Laravel's file upload testing documentation](https://laravel.com/docs/http-tests#testing-file-uploads).
+有關測試文件上傳的更多具體信息，請參考 [Laravel 的文件上傳測試文檔](https://laravel.com/docs/http-tests#testing-file-uploads)。
 
-## Uploading Directly To Amazon S3 {#upload-to-s3}
-As previously mentioned, Livewire stores all file uploads in a temporary directory until the developer chooses to store the file permanently.
+## 直接上傳到 Amazon S3 {#upload-to-s3}
+如前所述，Livewire 將所有文件上傳存儲在臨時目錄中，直到開發人員選擇永久存儲文件。
 
-By default, Livewire uses the default filesystem disk configuration (usually `local`), and stores the files under a folder called `livewire-tmp/`.
+默認情況下，Livewire 使用默認的文件系統磁碟配置（通常是 `local`），並將文件存儲在名為 `livewire-tmp/` 的文件夾中。
 
-This means that file uploads are always hitting your server; even if you choose to store them in an S3 bucket later.
+這意味著文件上傳始終會命中您的伺服器；即使您稍後選擇將它們存儲在 S3 存儲桶中。
 
-If you wish to bypass this system and instead store Livewire's temporary uploads in an S3 bucket, you can configure that behavior easily:
+如果您希望繞過此系統，而是將 Livewire 的臨時上傳存儲在 S3 存儲桶中，您可以輕鬆配置該行為：
 
-In your `config/livewire.php` file, set `livewire.temporary_file_upload.disk` to `s3` (or another custom disk that uses the `s3` driver):
+在您的 `config/livewire.php` 檔案中，將 `livewire.temporary_file_upload.disk` 設置為 `s3`（或使用 `s3` 驅動程序的其他自定義磁碟）：
 
 @component('components.code-component')
 @slot('class')
@@ -331,51 +299,51 @@ return [
 @endslot
 @endcomponent
 
-Now, when a user uploads a file, the file will never actually hit your server. It will be uploaded directly to your S3 bucket, under the sub-directory: `livewire-tmp/`.
+現在，當用戶上傳文件時，文件實際上不會傳遞到您的伺服器。它將直接上傳到您的 S3 存儲桶，位於子目錄：`livewire-tmp/`。
 
-### Configuring Automatic File Cleanup {#auto-cleanup}
-This temporary directory will fill up with files quickly, therefore, it's important to configure S3 to cleanup files older than 24 hours.
+### 配置自動文件清理 {#auto-cleanup}
+這個臨時目錄將很快填滿文件，因此，重要的是配置 S3 以清理 24 小時前的文件。
 
-To configure this behavior, simply run the following artisan command from the environment that has the S3 bucket configured.
+要配置此行為，只需從已配置 S3 存儲桶的環境運行以下 artisan 命令。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan livewire:configure-s3-upload-cleanup
 @endcomponent
 
-Now, any temporary files older than 24 hours will be cleaned up by S3 automatically.
+現在，任何超過 24 小時的臨時文件將由 S3 自動清理。
 
 @component('components.tip')
-If you are not using S3, Livewire will handle the file cleanup automatically. No need to run this command.
+如果您未使用 S3，Livewire 將自動處理文件清理。無需運行此命令。
 @endcomponent
 
-## Loading Indicators {#loading-indicators}
-Although `wire:model` for file uploads works differently than other `wire:model` input types under the hood, the interface for showing loading indicators remains the same.
+## 載入指示器 {#loading-indicators}
+雖然文件上傳的 `wire:model` 在底層的工作方式與其他 `wire:model` 輸入類型不同，但顯示載入指示器的界面保持不變。
 
-You can display a loading indicator scoped to the file upload like so:
+您可以這樣顯示與文件上傳相關的載入指示器：
 
 @component('components.code', ['lang' => 'blade'])
 <input type="file" wire:model="photo">
 
-<div wire:loading wire:target="photo">Uploading...</div>
+<div wire:loading wire:target="photo">正在上傳...</div>
 @endcomponent
 
-Now, while the file is uploading the "Uploading..." message will be shown and then hidden when the upload is finished.
+現在，在文件上傳時將顯示 "正在上傳..." 消息，並在上傳完成時隱藏。
 
-This works with the entire Livewire [Loading States API](loading-states).
+這與整個 Livewire [載入狀態 API](loading-states) 一起使用。
 
-## Progress Indicators (And All JavaScript Events) {#js-hooks}
-Every file upload in Livewire dispatches JavaScript events on the `<input>` element for custom JavaScript to listen to.
+## 進度指示器（以及所有 JavaScript 事件） {#js-hooks}
+Livewire 中的每個文件上傳都會在 `<input>` 元素上發送 JavaScript 事件，以供自定義 JavaScript 監聽。
 
-Here are the dispatched events:
+以下是發送的事件：
 
-Event | Description
+事件 | 說明
 --- | ---
-`livewire-upload-start` | Dispatched when the upload starts
-`livewire-upload-finish` | Dispatches if the upload is successfully finished
-`livewire-upload-error` | Dispatches if the upload fails in some way
-`livewire-upload-progress` | Dispatches an event containing the upload progress percentage as the upload progresses
+`livewire-upload-start` | 上傳開始時發送
+`livewire-upload-finish` | 如果上傳成功完成則發送
+`livewire-upload-error` | 如果上傳失敗則發送
+`livewire-upload-progress` | 隨著上傳進度發送包含上傳進度百分比的事件
 
-Here is an example of wrapping a Livewire file upload in an AlpineJS component to display a progress bar:
+這是一個示例，將 Livewire 檔案上傳包裝在 AlpineJS 元件中，以顯示進度條：
 
 @component('components.code', ['lang' => 'blade'])
 <div
@@ -385,23 +353,23 @@ Here is an example of wrapping a Livewire file upload in an AlpineJS component t
     x-on:livewire-upload-error="isUploading = false"
     x-on:livewire-upload-progress="progress = $event.detail.progress"
 >
-    <!-- File Input -->
+    <!-- 檔案輸入 -->
     <input type="file" wire:model="photo">
 
-    <!-- Progress Bar -->
+    <!-- 進度條 -->
     <div x-show="isUploading">
         <progress max="100" x-bind:value="progress"></progress>
     </div>
 </div>
 @endcomponent
 
-## JavaScript Upload API {#js-api}
-Integrating with 3rd-party file-uploading libraries often requires finer-tuned control than a simple `<input type="file">` tag.
+## JavaScript 上傳 API {#js-api}
+與第三方檔案上傳庫整合通常需要比簡單的 `<input type="file">` 標籤更精細的控制。
 
-For these cases, Livewire exposes dedicated JavaScript functions.
+對於這些情況，Livewire 提供了專用的 JavaScript 函數。
 
 @verbatim
-The functions exist on the JavaScript component object, which can be accessed using the convenience Blade directive: `@this`. If you haven't seen `@this` before, you can read more about it [here](inline-scripts).
+這些函數存在於 JavaScript 元件物件上，可以使用方便的 Blade 指示詞 `@this` 來訪問。如果您之前沒有看過 `@this`，您可以在[這裡](inline-scripts)閱讀更多相關資訊。
 @endverbatim
 
 @component('components.code', ['lang' => 'blade'])
@@ -409,48 +377,32 @@ The functions exist on the JavaScript component object, which can be accessed us
 <script>
     let file = document.querySelector('input[type="file"]').files[0]
 
-    // Upload a file:
+    // 上傳檔案：
     @this.upload('photo', file, (uploadedFilename) => {
-        // Success callback.
+        // 成功回呼函式。
     }, () => {
-        // Error callback.
+        // 錯誤回呼函式。
     }, (event) => {
-        // Progress callback.
-        // event.detail.progress contains a number between 1 and 100 as the upload progresses.
+        // 進度回呼函式。
+        // event.detail.progress 包含一個介於 1 到 100 之間的數字，表示上傳進度。
     })
 
-    // Upload multiple files:
+    // 上傳多個檔案：
     @this.uploadMultiple('photos', [file], successCallback, errorCallback, progressCallback)
 
-    // Remove single file from multiple uploaded files
+    // 從多個已上傳的檔案中移除單一檔案
     @this.removeUpload('photos', uploadedFilename, successCallback)
 </script>
 @endverbatim
 @endcomponent
 
-## Configuration {#configuration}
-Because Livewire stores all file uploads temporarily before the developer has a chance to validate or store them, Livewire assumes some default handling of all file uploads.
+## 組態設定 {#configuration}
+因為 Livewire 在開發者有機會驗證或儲存檔案之前暫時存儲所有檔案上傳，Livewire 假設對所有檔案上傳進行了一些默認處理。
 
-### Global Validation {#global-validation}
-By default, Livewire will validate ALL temporary file uploads with the following rules: `file|max:12288` (Must be a file less than 12MB).
+### 全域確認 {#global-validation}
+預設情況下，Livewire 將使用以下規則對所有臨時檔案上傳進行確認：`file|max:12288`（檔案大小必須小於 12MB）。
 
-If you wish to customize this, you can configure exactly what validate rules should run on all temporary file uploads inside `config/livewire.php`:
-
-@component('components.code-component')
-@slot('class')
-return [
-    ...
-    'temporary_file_upload' => [
-        ...
-        'rules' => 'file|mimes:png,jpg,pdf|max:102400', // (100MB max, and only pngs, jpegs, and pdfs.)
-        ...
-    ],
-];
-@endslot
-@endcomponent
-
-### Global Middleware {#global-middleware}
-The temporary file upload endpoint has throttling middleware by default. You can customize exactly what middleware this endpoint uses with the following configuration variable:
+如果您希望自訂此設定，您可以在 `config/livewire.php` 內確切配置所有臨時檔案上傳應運行的確認規則：
 
 @component('components.code-component')
 @slot('class')
@@ -458,14 +410,30 @@ return [
     ...
     'temporary_file_upload' => [
         ...
-        'middleware' => 'throttle:5,1', // Only allow 5 uploads per user per minute.
+        'rules' => 'file|mimes:png,jpg,pdf|max:102400', //（最大 100MB，僅限 png、jpg 和 pdf 檔案）
+        ...
     ],
 ];
 @endslot
 @endcomponent
 
-### Temporary Upload Directory {#temporary-upload-directory}
-Temporary files are uploaded to the `livewire-tmp/` directory on the specified disk. You can customize this with the following configuration key:
+### 全域中介層 {#global-middleware}
+臨時檔案上傳端點預設具有節流中介層。您可以使用以下配置變數自訂此端點使用的中介層：
+
+@component('components.code-component')
+@slot('class')
+return [
+    ...
+    'temporary_file_upload' => [
+        ...
+        'middleware' => 'throttle:5,1', // 每位使用者每分鐘僅允許上傳 5 次。
+    ],
+];
+@endslot
+@endcomponent
+
+### 臨時上傳目錄 {#temporary-upload-directory}
+臨時檔案上傳至指定磁碟上的 `livewire-tmp/` 目錄。您可以使用以下配置鍵自訂此設定：
 
 @component('components.code-component')
 @slot('class')
@@ -479,8 +447,8 @@ return [
 @endslot
 @endcomponent
 
-### Maximum Upload Time
-File uploads are automatically invalidated if they take longer than 5 minutes. You can customize this with the following configuration key:
+### 最大上傳時間
+如果檔案上傳時間超過 5 分鐘，將自動使其失效。您可以使用以下配置鍵自訂此設定：
 
 @component('components.code-component')
 @slot('class')

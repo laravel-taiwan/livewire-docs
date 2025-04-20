@@ -1,15 +1,15 @@
-* [Introduction](#introduction)
-* [Testing Component Presence](#testing-component-presence)
-* [Testing With Query String Parameters](#testing-querystring)
-* [Testing Components With Passed Data](#testing-passed-data)
-* [Generating Tests](#generating-tests)
-* [All Available Test Methods](#all-testing-methods)
+* [簡介](#introduction)
+* [測試元件存在性](#testing-component-presence)
+* [使用查詢字串參數進行測試](#testing-querystring)
+* [使用傳遞資料進行測試元件](#testing-passed-data)
+* [生成測試](#generating-tests)
+* [所有可用的測試方法](#all-testing-methods)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire offers a powerful set of tools for testing your components.
+Livewire 提供了一套強大的工具來測試您的元件。
 
-Here's a Livewire component and a corresponding test to demonstrate the basics.
+這裡有一個 Livewire 元件和相應的測試，以展示基本功能。
 
 @component('components.code-component')
 @slot('class')
@@ -84,19 +84,19 @@ class CreatePostTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(CreatePost::class)
-            ->set('title', 'foo')
-            ->call('create')
-            ->assertRedirect('/posts');
-    }
+```php
+Livewire::test(CreatePost::class)
+    ->set('title', 'foo')
+    ->call('create')
+    ->assertRedirect('/posts');
 }
-@endcomponent
+```
 
-## Testing Component Presence {#testing-component-presence}
+## 測試元件存在性 {#testing-component-presence}
 
-Livewire registers handy PHPUnit methods for testing a components presence on a page.
+Livewire 註冊了方便的 PHPUnit 方法，用於測試頁面上元件的存在性。
 
-@component('components.code', ['lang' => 'php'])
+```php
 class CreatePostTest extends TestCase
 {
     /** @test */
@@ -111,11 +111,11 @@ class CreatePostTest extends TestCase
         $this->get('/posts/create')->assertDontSeeLivewire('edit-post');
     }
 }
-@endcomponent
+```
 
-Alternatively, you may pass a component's class name to the `assertSeeLivewire` and `assertDontSeeLivewire` methods.
+或者，您可以將元件的類別名稱傳遞給 `assertSeeLivewire` 和 `assertDontSeeLivewire` 方法。
 
-@component('components.code', ['lang' => 'php'])
+```php
 use App\Http\Livewire\CreatePost;
 use App\Http\Livewire\EditPost;
 
@@ -133,13 +133,13 @@ class CreatePostTest extends TestCase
         $this->get('/posts/create')->assertDontSeeLivewire(EditPost::class);
     }
 }
-@endcomponent
+```
 
-## Testing With Query String Parameters {#testing-querystring}
+## 使用查詢字串參數進行測試 {#testing-querystring}
 
-To test Livewire's `$queryString` functionality, you can use Livewire's `::withQueryParams` testing utility.
+要測試 Livewire 的 `$queryString` 功能，您可以使用 Livewire 的 `::withQueryParams` 測試工具。
 
-@component('components.code', ['lang' => 'php'])
+```php
 class CreatePostTest extends TestCase
 {
     /** @test */
@@ -151,17 +151,15 @@ class CreatePostTest extends TestCase
             ->assertSee('bar');
     }
 }
-@endcomponent
+```
 
-## Testing Components With Passed Data {#testing-passed-data}
+## 測試帶有傳遞資料的元件 {#testing-passed-data}
 
-@component('components.code-component')
-@slot('view')
-@verbatim
+```php
 <livewire:show-foo foo="bar">
-@endverbatim
-@endslot
-@slot('class')
+```
+
+```php
 class CreatePostTest extends TestCase
 {
     /** @test */
@@ -172,12 +170,11 @@ class CreatePostTest extends TestCase
             ->assertSee('bar');
     }
 }
-@endslot
-@endcomponent
+```
 
-## Generating Tests {#generating-tests}
+## 生成測試 {#generating-tests}
 
-When creating a component, you can include the `--test` flag, and a test file will be created for you as well.
+在建立元件時，您可以包含 `--test` 標誌，系統將為您創建一個測試檔案。
 
 @component('components.code', ['lang' => 'shell'])
 php artisan make:livewire ShowPosts --test
@@ -198,129 +195,133 @@ class ShowPostsTest extends TestCase
 @endslot
 @endcomponent
 
-## All Available Test Methods {#all-testing-methods}
+## 所有可用的測試方法 {#all-testing-methods}
 
 @component('components.code', ['lang' => 'php'])
 Livewire::actingAs($user);
-// Set the provided user as the session's logged in user for the test
+// 將提供的使用者設置為測試中的會話登錄使用者
 
 Livewire::withQueryParams(['foo' => 'bar']);
-// Set the query param "foo" to "bar" for the Livewire component's `$queryString` property to pick up.
+// 將查詢參數 "foo" 設置為 "bar"，以便 Livewire 元件的 `$queryString` 屬性可以接收
 
 Livewire::test('foo', ['bar' => $bar]);
-// Test the "foo" component with "bar" set as a parameter.
+// 使用 "bar" 作為參數測試 "foo" 元件
 
 ->set('foo', 'bar');
-// Set the "foo" property (`public $foo`) to the value: "bar"
+// 將 "foo" 屬性 (`public $foo`) 設置為值: "bar"
 
 ->toggle('foo');
-// Toggle the "foo" property (`public $foo`) between true and false
+// 在 true 和 false 之間切換 "foo" 屬性 (`public $foo`)
 
 ->call('foo');
-// Call the "foo" method
+// 呼叫 "foo" 方法
 
 ->call('foo', 'bar', 'baz');
-// Call the "foo" method, and pass the "bar" and "baz" parameters
+// 呼叫 "foo" 方法，並傳遞 "bar" 和 "baz" 參數
 
 ->emit('foo');
-// Fire the "foo" event
+// 觸發 "foo" 事件
 
 ->emit('foo', 'bar', 'baz');
-// Fire the "foo" event, and pass the "bar" and "baz" parameters
+// 觸發 "foo" 事件，並傳遞 "bar" 和 "baz" 參數
 
 ->assertSet('foo', 'bar');
-// Asserts that the "foo" property is set to the value "bar" (Includes computed properties)
+// 斷言 "foo" 屬性設置為值 "bar"（包括計算屬性）
 
 ->assertNotSet('foo', 'bar');
-// Asserts that the "foo" property is NOT set to the value "bar" (Includes computed properties)
+// 斷言 "foo" 屬性未設置為值 "bar"（包括計算屬性）
 
 ->assertCount('foo', 1);
-// Asserts that the "foo" property (an array) has a count of 1 (Includes computed properties)
+// 斷言 "foo" 屬性（陣列）計數為 1（包括計算屬性）
 
 ->assertPayloadSet('foo', 'bar');
-// Asserts that the "foo" property from the JavaScript payload that Livewire returns is set to the value "bar"
+// 斷言 Livewire 返回的 JavaScript 載荷中的 "foo" 屬性設置為值 "bar"
 
 ->assertPayloadNotSet('foo', 'bar');
-// Asserts that the "foo" property in the JavaScript payload that Livewire returns is NOT set to the value "bar"
+// 斷言 Livewire 返回的 JavaScript 載荷中的 "foo" 屬性未設置為值 "bar"
 
+```plaintext
 ->assertViewIs('foo');
-// Assert that the view "foo" is the currently rendered view
+// 斷言視圖 "foo" 是目前渲染的視圖
 
 ->assertViewHas('foo', 'bar');
-// Assert that the rendered view has a key of "foo" with a value of "bar"
+// 斷言渲染的視圖具有鍵為 "foo" 且值為 "bar"
 
 ->assertSee('foo');
-// Assert that the string "foo" exists in the currently rendered content of the component
+// 斷言字串 "foo" 存在於元件目前渲染的內容中
 
 ->assertDontSee('foo');
-// Assert that the string "foo" DOES NOT exist in the currently rendered content of the component
+// 斷言字串 "foo" 不存在於元件目前渲染的內容中
 
 ->assertSeeHtml('<h1>foo</h1>');
-// Assert that the string "<h1>foo</h1>" exists in the currently rendered HTML of the component
+// 斷言字串 "<h1>foo</h1>" 存在於元件目前渲染的 HTML 中
 
 ->assertDontSeeHtml('<h1>foo</h1>');
-// Assert that the string "<h1>foo</h1>" DOES NOT exist in the currently rendered HTML of the component
+// 斷言字串 "<h1>foo</h1>" 不存在於元件目前渲染的 HTML 中
 
 ->assertSeeInOrder(['foo', 'bar']);
-// Assert that the string "foo" exists before "bar" in the currently rendered content of the component
+// 斷言字串 "foo" 存在於元件目前渲染的內容中且在 "bar" 之前
 
 ->assertSeeHtmlInOrder(['<h1>foo</h1>', '<h1>bar</h1>']);
-// Assert that the string "<h1>foo</h1>" exists before "<h1>bar</h1>" in the currently rendered content of the component
+// 斷言字串 "<h1>foo</h1>" 存在於元件目前渲染的內容中且在 "<h1>bar</h1>" 之前
 
 ->assertEmitted('foo');
-// Assert that the "foo" event was emitted
+// 斷言已發出 "foo" 事件
 
 ->assertEmitted('foo', 'bar', 'baz');
-// Assert that the "foo" event was emitted with the "bar" and "baz" parameters
+// 斷言已發出 "foo" 事件並帶有 "bar" 和 "baz" 參數
 
 ->assertNotEmitted('foo');
-// Assert that the "foo" event was NOT emitted
+// 斷言未發出 "foo" 事件
 
 ->assertEmittedTo('bar','foo');
-// Assert that the "foo" event was emitted to "bar" component
+// 斷言已發出 "foo" 事件至 "bar" 元件
 
 ->assertHasErrors('foo');
-// Assert that the "foo" property has validation errors
+// 斷言 "foo" 屬性具有驗證錯誤
 
 ->assertHasErrors(['foo', 'bar']);
-// Assert that the "foo" AND "bar" properties have validation errors
+// 斷言 "foo" 和 "bar" 屬性具有驗證錯誤
 
 ->assertHasErrors(['foo' => 'required']);
-// Assert that the "foo" property has a "required" validation rule error
+// 斷言 "foo" 屬性具有 "required" 驗證規則錯誤
 
 ->assertHasErrors(['foo' => ['required', 'min']]);
-// Assert that the "foo" property has a "required" AND "min" validation rule error
+// 斷言 "foo" 屬性具有 "required" 和 "min" 驗證規則錯誤
 
 ->assertHasNoErrors('foo');
-// Assert that the "foo" property has no validation errors
+// 斷言 "foo" 屬性沒有驗證錯誤
 
 ->assertHasNoErrors(['foo', 'bar']);
-// Assert that the "foo" AND "bar" properties have no validation errors
+// 斷言 "foo" 和 "bar" 屬性沒有驗證錯誤
 
 ->assertNotFound();
-// Assert that an error within the component caused an error with the status code: 404
+// 斷言元件內部錯誤導致狀態碼為 404 的錯誤
+```
 
+```php
 ->assertRedirect('/some-path');
-// Assert that a redirect was triggered from the component
+// 斷言從元件觸發了重新導向
 
 ->assertNoRedirect();
-// Assert that no redirect was triggered from the component
+// 斷言從元件未觸發重新導向
 
 ->assertUnauthorized();
-// Assert that an error within the component caused an error with the status code: 401
+// 斷言元件內部錯誤導致狀態碼為 401 的錯誤
 
 ->assertForbidden();
-// Assert that an error within the component caused an error with the status code: 403
+// 斷言元件內部錯誤導致狀態碼為 403 的錯誤
 
 ->assertStatus(500);
-// Assert that an error within the component caused an error with the status code: 500
+// 斷言元件內部錯誤導致狀態碼為 500 的錯誤
 
 ->assertDispatchedBrowserEvent('event', $data);
-// Assert that a browser event was dispatched from the component using (->dispatchBrowserEvent(...))
+// 斷言使用 (->dispatchBrowserEvent(...)) 從元件派發了瀏覽器事件
 
 ->assertNotDispatchedBrowserEvent('event');
-// Assert that a browser event was not dispatched from the component using (->dispatchBrowserEvent(...))
+// 斷言使用 (->dispatchBrowserEvent(...)) 從元件未派發瀏覽器事件
 
 ->assertFileDownloaded($filename)
-// Assert that a downloaded file was returned with a specific name
+// 斷言返回了具有特定名稱的下載文件
 @endcomponent
+```

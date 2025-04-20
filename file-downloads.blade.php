@@ -1,11 +1,11 @@
-* [Introduction](#introduction)
-* [Testing File Downloads](#testing-file-downloads)
+* [簡介](#introduction)
+* [測試檔案下載](#testing-file-downloads)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire supports triggering file downloads for users with a simple, intuitive API.
+Livewire支援使用簡單直觀的API為使用者觸發檔案下載。
 
-To trigger a file download, you can return a Laravel file download from any component action.
+要觸發檔案下載，您可以從任何元件動作返回Laravel檔案下載。
 
 @component('components.code-component')
 @slot('class')
@@ -22,13 +22,13 @@ class ExportButton extends Component
 @slot('view')
 @verbatim
 <button wire:click="export">
-    Download File
+    下載檔案
 </button>
 @endverbatim
 @endslot
 @endcomponent
 
-Livewire should handle any file download that Laravel would. Here are a few other utilities you might use:
+Livewire應該處理Laravel會處理的任何檔案下載。這裡有一些您可能會使用的其他工具:
 
 @component('components.code', ['lang' => 'php'])
 @verbatim
@@ -39,15 +39,15 @@ return response()->download(storage_path('exports/export.csv'));
 @component('components.code', ['lang' => 'php'])
 @verbatim
 return response()->streamDownload(function () {
-    echo 'CSV Contents...';
+    echo 'CSV 內容...';
 }, 'export.csv');
 @endverbatim
 @endcomponent
 
-## Testing File Downloads {#testing-file-downloads}
-Testing file downloads is simple with livewire.
+## 測試檔案下載 {#testing-file-downloads}
+使用livewire進行檔案下載的測試很簡單。
 
-Here is an example of testing the component above and making sure the export was downloaded.
+以下是測試上面元件並確保已下載匯出的範例。
 
 @component('components.code-component', [
     'className' => 'ExportDownloadedTest.php',

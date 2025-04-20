@@ -1,115 +1,115 @@
-* [Setup Livewire locally](#setup-livewire-locally)
-    * [Fork Livewire](#fork-livewire)
-    * [Git clone your fork locally](#clone-fork)
-    * [Install dependencies](#install-dependencies)
-    * [Configure dusk](#configure-dusk)
-    * [Run tests](#setup-run-tests)
-* [Bug fix/ feature development](#bug-fix-feature-development)
-    * [Create a branch](#create-a-branch)
-    * [Add failing tests](#add-failing-tests)
-    * [Add working code](#add-working-code)
-    * [Run tests](#development-run-tests)
-    * [Submit PR](#submit-pr)
-    * [Thanks for contributing! 🙌](#thanks)
+* [在本地設置 Livewire](#setup-livewire-locally)
+    * [分叉 Livewire](#fork-livewire)
+    * [在本地克隆您的分叉](#clone-fork)
+    * [安裝相依性](#install-dependencies)
+    * [配置 dusk](#configure-dusk)
+    * [運行測試](#setup-run-tests)
+* [錯誤修復/功能開發](#bug-fix-feature-development)
+    * [建立分支](#create-a-branch)
+    * [新增失敗測試](#add-failing-tests)
+    * [新增正確代碼](#add-working-code)
+    * [運行測試](#development-run-tests)
+    * [提交 PR](#submit-pr)
+    * [感謝您的貢獻！ 🙌](#thanks)
 
-At Livewire we appreciate and welcome all contributions!
+在 Livewire，我們感激並歡迎所有貢獻！
 
-If that's something you would be interested in doing, we recommend going through this contribution guide first before starting.
+如果您對此感興趣，我們建議您在開始之前先閱讀這份貢獻指南。
 
-## Setup Livewire locally {#setup-livewire-locally}
+## 在本地設置 Livewire {#setup-livewire-locally}
 
-The first step is to create a fork of Livewire and set it up locally. You should only need to do this the first time.
+第一步是創建 Livewire 的分叉並在本地設置。您應該只需要在第一次這樣做。
 
-### Fork Livewire {#fork-livewire}
+### 分叉 Livewire {#fork-livewire}
 
-Go to [the Livewire repository on GitHub](https://github.com/livewire/livewire) and fork the Livewire repository.
+前往 [GitHub 上的 Livewire 存儲庫](https://github.com/livewire/livewire) 並分叉 Livewire 存儲庫。
 
-![Fork Livewire on GitHub](/img/docs/github-fork.png) {.border}
+![在 GitHub 上分叉 Livewire](/img/docs/github-fork.png) {.border}
 
-### Git clone your fork locally {#clone-fork}
+### 在本地克隆您的分叉 {#clone-fork}
 
-Browse to your fork on GitHub, and click on the "code" button, and copy the provided URL.
+在 GitHub 上找到您的分叉，點擊 "code" 按鈕，並複製提供的 URL。
 
-![Clone Livewire on GitHub](/img/docs/github-clone.png) {.border}
+![在 GitHub 上克隆 Livewire](/img/docs/github-clone.png) {.border}
 
-Then in your local terminal run `git clone` and pass it your URL and the directory name you want Livewire cloned into.
+然後在本地終端運行 `git clone`，並傳遞您的 URL 和您想要將 Livewire 克隆到的目錄名稱。
 
 @component('components.code', ['lang' => 'shell'])
 git clone git@github.com:username/livewire.git ~/packages/livewire
 @endcomponent
 
-Once finished, `cd` into your local Livewire directory.
+完成後，`cd` 進入您的本地 Livewire 目錄。
 
 @component('components.code', ['lang' => 'shell'])
 cd ~/packages/livewire
 @endcomponent
 
-### Install dependencies {#install-dependencies}
+### 安裝相依性 {#install-dependencies}
 
-Install composer dependencies by running:
+運行以下命令安裝 composer 相依性：
 
 @component('components.code', ['lang' => 'shell'])
 composer install
 @endcomponent
 
-Install npm dependencies by running:
+運行以下命令安裝 npm 相依性：
 
 @component('components.code', ['lang' => 'shell'])
 npm install
 @endcomponent
 
-### Configure dusk {#configure-dusk}
+### 配置 dusk {#configure-dusk}
 
-A lot of Livewire's tests make use of `orchestral/testbench-dusk` which runs browser tests in Google Chrome (so you will need Chrome to be installed).
+許多 Livewire 的測試使用 `orchestral/testbench-dusk`，該工具在 Google Chrome 中運行瀏覽器測試（因此您需要安裝 Chrome）。
 
-To get `orchestral/testbench-dusk` to run, you need to install the latest chrome driver by running:
+要讓 `orchestral/testbench-dusk` 運行，您需要執行以下命令來安裝最新的 Chrome 驅動程式：
 
 @component('components.code', ['lang' => 'shell'])
 ./vendor/bin/dusk-updater detect --auto-update
 @endcomponent
 
-### Run tests {#setup-run-tests}
+### 執行測試 {#setup-run-tests}
 
-Once everything is configured, run all tests to make sure everything is working and passing.
+一旦一切都配置好了，運行所有測試以確保一切運作正常並通過。
 
-To do this, run `phpunit` and confirm everything is running ok.
+要做到這一點，運行 `phpunit` 並確認一切運行正常。
 
 @component('components.code', ['lang' => 'shell'])
 phpunit
 @endcomponent
 
-If the dusk tests don't run and you get an error, make sure you have run the command in the [Configure dusk](#configure-dusk) section above.
+如果 dusk 測試未運行並出現錯誤，請確保您已執行上面 [配置 dusk](#configure-dusk) 部分中的命令。
 
-If you still get an error, the first time you try to run dusk tests, you may also need to close any Google Chrome instances you may have open and try running the tests again. After that, you should be able to leave Chrome open when running tests.
+如果您仍然遇到錯誤，第一次嘗試運行 dusk 測試時，您可能還需要關閉您可能已經打開的任何 Google Chrome 實例，然後再次嘗試運行測試。之後，您應該能夠在運行測試時保持 Chrome 開啟。
 
 
-## Bug fix/ feature development {#bug-fix-feature-development}
+## Bug 修復/功能開發 {#bug-fix-feature-development}
 
-Now it's time to start working on your bug fix or new feature.
+現在是時候開始處理您的 bug 修復或新功能了。
 
-### Create a branch {#create-a-branch}
+### 創建分支 {#create-a-branch}
 
-To start working on a new feature or fix a bug, you should always create a new branch in your fork with the name of your feature or fix.
+要開始開發新功能或修復 bug，您應該始終在您的分支中使用您的功能或修復的名稱創建一個新分支。
 
 @component('components.tip')
-Always create a new branch for your feature or fix.
+始終為您的功能或修復創建一個新分支。
 @endcomponent
 
-Do not use your master/ main branch of your fork as maintainers cannot modify PR's submitted from a master/main branch on a fork.
+不要使用您的分支的主分支，因為維護者無法修改從分支的主分支提交的 PR。
 
 @component('components.warning')
-Any PR's submitted from a master/main branch will be closed.
+從主分支提交的任何 PR 將被關閉。
 @endcomponent
 
-### Add failing tests {#add-failing-tests}
+### 添加失敗測試 {#add-failing-tests}
 
-The next step is to add failing tests for your code.
+下一步是為您的代碼添加失敗測試。
 
-Livewire has both Dusk browser tests and standard PHPUnit unit tests, which you can find in `tests/Browser` and `tests/Unit` respectively.
+Livewire 同時具有 Dusk 瀏覽器測試和標準 PHPUnit 單元測試，您可以在 `tests/Browser` 和 `tests/Unit` 中找到它們。
 
-Livewire runs both PHP and Javascript code, so Dusk browser tests are preferred to ensure everything works as expected, and can be supported with unit tests as required.
+Livewire 同時運行 PHP 和 Javascript 代碼，因此建議使用 Dusk 瀏覽器測試來確保一切按預期運作，並根據需要支持單元測試。
 
-See below for an example of how a Livewire Dusk test should be structured:
+以下是 Livewire Dusk 測試應該結構化的範例：
 
 @component('components.code', ['lang' => 'php'])
 /** @test */
@@ -118,7 +118,7 @@ public function it_can_run_foo_action
     $this->browse(function ($browser) {
         Livewire::visit($browser, FooComponent::class)
             /**
-             * Basic action (click).
+             * 基本動作（點擊）。
              */
             ->waitForLivewire()->click('@foo')
             ->assertSeeIn('@output', 'foo')
@@ -127,56 +127,56 @@ public function it_can_run_foo_action
 }
 @endcomponent
 
-You can see how to use Dusk in the [Laravel documentation](https://laravel.com/docs/8.x/dusk) as well as look at Livewire's existing browser tests for further examples.
+您可以在 [Laravel 文件](https://laravel.com/docs/8.x/dusk) 中查看如何使用 Dusk，並查看 Livewire 現有的瀏覽器測試以獲得更多範例。
 
-### Add working code {#add-working-code}
+### 添加可運行的程式碼 {#add-working-code}
 
-Livewire has both PHP and javascript code, which you can find in the `src` directory for PHP and the `js` directory for javascript.
+Livewire 同時具有 PHP 和 JavaScript 代碼，您可以在 `src` 目錄中找到 PHP 代碼，並在 `js` 目錄中找到 JavaScript 代碼。
 
-Change the code as required to fix the bug or add the new feature, but try to keep changes to a minimum. Consider splitting into multiple PR's if required.
+根據需要更改程式碼以修復錯誤或添加新功能，但請儘量保持更改最小化。如有需要，考慮拆分為多個 PR。
 
 @component('components.warning')
-PR's that make too many changes or make unrelated changes may be closed.
+進行過多更改或無關更改的 PR 可能會被關閉。
 @endcomponent
 
-If you have updated any of Livewire's javascript code, you will need to recompile the assets.
-To do this run `npm run build`, or you may start a watcher with `npm run watch`.
+如果您已更新 Livewire 的 JavaScript 代碼，則需要重新編譯資源檔。
+要執行此操作，運行 `npm run build`，或者您可以使用 `npm run watch` 開始一個監視器。
 
-Compiled javascript assets should be committed with your changes.
+編譯後的 JavaScript 資源應與您的更改一起提交。
 
 @component('components.tip')
-If you update any javascript, make sure to recompile assets and commit them.
+如果您更新了任何 JavaScript，請確保重新編譯資源檔並提交它們。
 @endcomponent
 
-Once you have finished writing your code, do a review to ensure you haven't left any debugging code and formatting matches the existing style.
+完成編寫程式碼後，請進行審查，以確保您沒有留下任何調試程式碼，並且格式與現有樣式相符。
 
-### Run tests {#development-run-tests}
+### 執行測試 {#development-run-tests}
 
-The final step before submitting is to run all tests to ensure your changes haven't impacted anything else.
+在提交之前的最後一步是運行所有測試，以確保您的更改沒有影響其他任何內容。
 
-To do this, run `phpunit` and confirm everything is running ok.
+要執行此操作，運行 `phpunit` 並確認一切運行正常。
 
 @component('components.code', ['lang' => 'shell'])
 phpunit
 @endcomponent
 
-If the Dusk browser tests don't run, see [Run tests](#setup-run-tests) in the Setup section above for more details
+如果 Dusk 瀏覽器測試無法運行，請參見上面設置部分的 [執行測試](#setup-run-tests) 以獲取更多詳細信息。
 
-### Submit PR {#submit-pr}
+### 提交 PR {#submit-pr}
 
-Once all tests pass, then push your branch up to GitHub and submit your PR.
+一旦所有測試通過，請將您的分支推送到 GitHub 並提交您的 PR。
 
-In your PR description make sure to provide a small example of what your PR does along with a thorough description of the improvement and reasons why it's useful.
-Add links to any issues or discussions that are relevant for further details.
+在您的 PR 描述中，請確保提供您的 PR 做了什麼的小例子，以及改進的詳細描述和其有用之處的原因。
+請添加任何相關的問題或討論的連結，以便進一步了解詳情。
 
 @component('components.tip')
-For first-time contributors, tests won't run automatically, so they will need to be started by a maintainer.
+對於第一次貢獻者，測試不會自動運行，因此需要由維護者啟動。
 @endcomponent
 
-### Thanks for contributing! 🙌 {#thanks}
+### 感謝您的貢獻！ 🙌 {#thanks}
 
-And that's it!
+就是這樣了！
 
-Maintainers will review your PR and give feedback as required.
+維護者將審查您的 PR，並根據需要提供反饋。
 
-Thanks for contributing to Livewire!
+感謝您對 Livewire 的貢獻！

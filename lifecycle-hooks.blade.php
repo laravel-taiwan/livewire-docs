@@ -1,33 +1,33 @@
-* [Class Hooks](#class-hooks)
-* [Javascript Hooks](#js-hooks)
+* [類別掛勾](#class-hooks)
+* [Javascript 掛勾](#js-hooks)
 
-## Class Hooks {#class-hooks}
+## 類別掛勾 {#class-hooks}
 
-Each Livewire component undergoes a lifecycle. Lifecycle hooks allow you to run code at any part of the component's lifecyle, or before specific properties are updated.
+每個 Livewire 元件都有一個生命週期。生命週期掛勾允許您在元件的生命週期的任何部分運行代碼，或在特定屬性更新之前運行代碼。
 
 @component('components.table')
-Hooks | Description
+掛勾 | 說明
 --- | ---
-boot | Runs on every request, immediately after the component is instantiated, but before any other lifecycle methods are called
-booted | Runs on every request, after the component is mounted or hydrated, but before any update methods are called
-mount | Runs once, immediately after the component is instantiated, but before `render()` is called. This is only called once on initial page load and never called again, even on component refreshes
-hydrate | Runs on every subsequent request, after the component is hydrated, but before an action is performed, or `render()` is called
-hydrateFoo | Runs after a property called `$foo` is hydrated
-dehydrate | Runs on every subsequent request, before the component is dehydrated, but after `render()` is called
-dehydrateFoo | Runs before a property called `$foo` is dehydrated
-updating | Runs before any update to the Livewire component's data (Using `wire:model`, not directly inside PHP)
-updated | Runs after any update to the Livewire component's data (Using `wire:model`, not directly inside PHP)
-updatingFoo | Runs before a property called `$foo` is updated. Array properties have an additional `$key` argument passed to this function to specify changing element inside array, like `updatingArray($value, $key)`
-updatedFoo | Runs after a property called `$foo` is updated. Array properties have additional `$key` argument as above
-updatingFooBar | Runs before updating a nested property `bar` on the `$foo` property or a multiword property such as `$fooBar` or `$foo_bar`
-updatedFooBar | Runs after updating a nested property `bar` on the `$foo` property or a multiword property such as `$fooBar` or `$foo_bar`
+boot | 在每個請求上運行，立即在元件實例化後運行，但在調用任何其他生命週期方法之前運行
+booted | 在每個請求上運行，在元件掛載或填充後運行，但在調用任何更新方法之前運行
+mount | 只運行一次，在元件實例化後立即運行，但在調用 `render()` 之前運行。這僅在初始頁面加載時調用一次，即使在元件刷新時也不會再次調用
+hydrate | 在每個後續請求上運行，在元件填充後運行，但在執行操作或調用 `render()` 之前運行
+hydrateFoo | 在名為 `$foo` 的屬性填充後運行
+dehydrate | 在每個後續請求上運行，在元件被填充後但在調用 `render()` 之前運行
+dehydrateFoo | 在名為 `$foo` 的屬性被填充前運行
+updating | 在更新 Livewire 元件數據之前運行（使用 `wire:model`，不直接在 PHP 內部運行）
+updated | 在更新 Livewire 元件數據後運行（使用 `wire:model`，不直接在 PHP 內部運行）
+updatingFoo | 在更新名為 `$foo` 的屬性之前運行。陣列屬性在此函數中有一個額外的 `$key` 參數，用於指定更改陣列內的元素，例如 `updatingArray($value, $key)`
+updatedFoo | 在更新名為 `$foo` 的屬性後運行。陣列屬性具有上述額外的 `$key` 參數
+updatingFooBar | 在更新 `$foo` 屬性上的嵌套屬性 `bar` 或多字詞屬性（如 `$fooBar` 或 `$foo_bar`）之前運行
+updatedFooBar | 在更新 `$foo` 屬性上的嵌套屬性 `bar` 或多字詞屬性（如 `$fooBar` 或 `$foo_bar`）後運行
 @endcomponent
 
 @component('components.warning')
-Please note that mutating a property directly inside a Livewire component class doesn't trigger any of the updating/updated hooks.
+請注意，在 Livewire 元件類別內直接變異屬性不會觸發任何更新/已更新掛勾。
 @endcomponent
 
-@component('components.code', ['lang' => 'php'])
+```php
 class HelloWorld extends Component
 {
     public $foo;
@@ -97,28 +97,28 @@ class HelloWorld extends Component
         //
     }
 }
-@endcomponent
+```
 
 ## Javascript Hooks {#js-hooks}
 
-Livewire gives you the opportunity to execute javascript during certain events.
+Livewire 提供了在特定事件期間執行 JavaScript 的機會。
 
-@component('components.table')
+```plaintext
 Hooks | Description
 --- | ---
-component.initialized | Called when a component has been initialized on the page by Livewire
-element.initialized | Called when Livewire initializes an individual element
-element.updating | Called before Livewire updates an element during its DOM-diffing cycle after a network roundtrip
-element.updated | Called after Livewire updates an element during its DOM-diffing cycle after a network roundtrip
-element.removed | Called after Livewire removes an element during its DOM-diffing cycle
-message.sent | Called when a Livewire update triggers a message sent to the server via AJAX
-message.failed | Called if the message send fails for some reason
-message.received | Called when a message has finished its roudtrip, but before Livewire updates the DOM
-message.processed | Called after Livewire processes all side effects (including DOM-diffing) from a message
-@endcomponent
+component.initialized | 當 Livewire 在頁面上初始化組件時調用
+element.initialized | 當 Livewire 初始化單個元素時調用
+element.updating | 在 Livewire 在網絡往返後的 DOM-diff 循環期間更新元素之前調用
+element.updated | 在 Livewire 在網絡往返後的 DOM-diff 循環期間更新元素後調用
+element.removed | 在 Livewire 在 DOM-diff 循環期間刪除元素後調用
+message.sent | 當 Livewire 更新觸發通過 AJAX 發送到服務器的消息時調用
+message.failed | 如果消息發送因某種原因失敗時調用
+message.received | 當消息完成其往返時調用，但在 Livewire 更新 DOM 之前調用
+message.processed | 在 Livewire 從消息處理所有副作用（包括 DOM-diffing）後調用
+```
 
 
-@component('components.code', ['lang' => 'js'])
+```js
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         Livewire.hook('component.initialized', (component) => {})
@@ -132,4 +132,6 @@ message.processed | Called after Livewire processes all side effects (including 
         Livewire.hook('message.processed', (message, component) => {})
     });
 </script>
-@endcomponent
+```
+
+Please paste the Markdown content you need to be translated into traditional Chinese.

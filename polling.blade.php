@@ -1,64 +1,64 @@
-* [Introduction](#introduction)
-* [Polling in the background](#polling-background)
-* [Polling only when element is visible](#polling-element-visible)
+* [簡介](#introduction)
+* [背景中的輪詢](#polling-background)
+* [僅當元素可見時進行輪詢](#polling-element-visible)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire offers a directive called `wire:poll` that, when added to an element, will refresh the component every `2s`.
+Livewire 提供了一個名為 `wire:poll` 的指示詞，當添加到元素時，將每 `2s` 刷新組件。
 
 @component('components.tip')
-Polling for changes over Ajax is a lightweight, simpler alternative to something like Laravel Echo, Pusher, or any WebSocket strategy.
+通過 Ajax 進行更改的輪詢是 Laravel Echo、Pusher 或任何 WebSocket 策略的一個輕量、簡單的替代方案。
 @endcomponent
 
 @component('components.code')
 @verbatim
 <div wire:poll>
-    Current time: {{ now() }}
+    當前時間：{{ now() }}
 </div>
 @endverbatim
 @endcomponent
 
-You can customize the frequency by passing a directive modifier like `750ms`. For example:
+您可以通過傳遞指示詞修改器如 `750ms` 來自定義頻率。例如：
 
 @component('components.code')
 @verbatim
 <div wire:poll.750ms>
-    Current time: {{ now() }}
+    當前時間：{{ now() }}
 </div>
 @endverbatim
 @endcomponent
 
-You can also specify a specific action to fire on the polling interval by passing a value to `wire:poll`:
+您還可以通過將值傳遞給 `wire:poll` 來指定在輪詢間隔上觸發的特定操作：
 
 @component('components.code')
 @verbatim
 <div wire:poll="foo">
-    Current time: {{ now() }}
+    當前時間：{{ now() }}
 </div>
 @endverbatim
 @endcomponent
 
-Now, the `foo` method on the component will be called every 2 seconds.
+現在，組件上的 `foo` 方法將每 2 秒被調用。
 
 
-## Polling in the background {#polling-background}
+## 背景中的輪詢 {#polling-background}
 
-Livewire reduces polling when the browser tab is in the background so that it doesn't bog down the server with ajax requests unnecessarily.
-Only about 5% of the expected polling requests are kept.
+Livewire 在瀏覽器標籤在背景時減少輪詢，以免不必要地使伺服器因 ajax 請求而變慢。
+僅保留預期輪詢請求的約 5%。
 
-If you'd like to keep polling at the normal rate even while the tab is in the background, you can use the `keep-alive` modifier:
+如果您希望即使標籤在背景中時也保持正常速率進行輪詢，您可以使用 `keep-alive` 修改器：
 
 @component('components.code')
 @verbatim
 <div wire:poll.keep-alive>
-    Current time: {{ now() }}
+    當前時間：{{ now() }}
 </div>
 @endverbatim
 @endcomponent
 
-## Polling only when element is visible {#polling-element-visible}
+## 僅當元素可見時進行輪詢 {#polling-element-visible}
 
-If your component isn't always visible in the browser's viewport (further down the page for example), you can opt to only poll the server when an element is visible by adding the `.visible` modifier to `wire:poll`. For example:
+如果您的組件在瀏覽器的視口中並非始終可見（例如在頁面下方），您可以選擇僅在元素可見時通過將 `.visible` 修改器添加到 `wire:poll` 來向伺服器輪詢。例如：
 
 @component('components.code')
 @verbatim

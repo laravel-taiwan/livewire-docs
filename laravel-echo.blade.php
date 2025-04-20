@@ -1,16 +1,16 @@
-* [Introduction](#introduction)
-* [Listeners](#listeners)
-* [Private & Presence Channels](#private-presence-channels)
+* [簡介](#introduction)
+* [監聽器](#listeners)
+* [私人和在線狀態頻道](#private-presence-channels)
 
-## Introduction {#introduction}
+## 簡介 {#introduction}
 
-Livewire pairs nicely with Laravel Echo to provide real-time functionality on your web-pages using WebSockets.
+Livewire與Laravel Echo搭配使用，可在網頁上使用WebSockets提供即時功能。
 
 @component('components.warning')
-This feature assumes you have installed Laravel Echo and the `window.Echo` object is globally available. For more info on this, check out the <a href="https://laravel.com/docs/broadcasting#client-side-installation">docs</a>.
+此功能假設您已安裝了Laravel Echo，並且`window.Echo`對象在全域範圍內可用。有關更多信息，請查看<a href="https://laravel.com/docs/broadcasting#client-side-installation">文檔</a>。
 @endcomponent
 
-Consider the following Laravel Event:
+考慮以下Laravel事件：
 
 @component('components.code-component')
 @slot('class')
@@ -26,13 +26,13 @@ class OrderShipped implements ShouldBroadcast
 @endslot
 @endcomponent
 
-Let's say you fire this event with Laravel's broadcasting system like this:
+假設您像這樣使用Laravel的廣播系統觸發此事件：
 
 @component('components.code', ['lang' => 'php'])
 event(new OrderShipped);
 @endcomponent
 
-Normally, you would listen for this event in Laravel Echo like so:
+通常，您會像這樣在Laravel Echo中聆聽此事件：
 
 @component('components.code', ['lang' => 'js'])
     Echo.channel('orders')
@@ -41,9 +41,9 @@ Normally, you would listen for this event in Laravel Echo like so:
         });
 @endcomponent
 
-## Listeners {#listeners}
+## 監聽器 {#listeners}
 
-With Livewire all you have to do is register it in your `$listeners` property, with some special syntax to designate that it originates from Echo.
+使用Livewire，您只需在`$listeners`屬性中註冊它，並使用一些特殊語法來指定它是來自Echo。
 
 @component('components.code-component')
 @slot('class')
@@ -51,7 +51,7 @@ class OrderTracker extends Component
 {
     public $showNewOrderNotification = false;
 
-    // Special Syntax: ['echo:{channel},{event}' => '{method}']
+    // 特殊語法: ['echo:{channel},{event}' => '{method}']
     protected $listeners = ['echo:orders,OrderShipped' => 'notifyNewOrder'];
 
     public function notifyNewOrder()
@@ -62,7 +62,7 @@ class OrderTracker extends Component
 @endslot
 @endcomponent
 
-If you have Echo channels with variables in (such as a Order ID) you can use the `getListeners()` function instead of the `$listeners` array.
+如果您的Echo頻道中有變數（例如訂單ID），您可以使用`getListeners()`函數代替`$listeners`陣列。
 
 @component('components.code-component')
 @slot('class')
@@ -70,39 +70,40 @@ class OrderTracker extends Component
 {
     public $showNewOrderNotification = false;
     public $orderId;
-    
-    public function getListeners()
-    {
-        return [
-            "echo:orders.{$this->orderId},OrderShipped" => 'notifyNewOrder',
-        ];
-    }
 
-    public function notifyNewOrder()
-    {
-        $this->showNewOrderNotification = true;
-    }
+```php
+public function getListeners()
+{
+    return [
+        "echo:orders.{$this->orderId},OrderShipped" => 'notifyNewOrder',
+    ];
+}
+
+public function notifyNewOrder()
+{
+    $this->showNewOrderNotification = true;
+}
 }
 @endslot
 @endcomponent
 
 @component('components.warning')
-<code>getListeners()</code> will only dynamically generate the names of listeners when the component is mounted. Once the listeners are setup, these can't be changed.
+<code>getListeners()</code> 只會在元件掛載時動態生成監聽器的名稱。一旦監聽器設置完成，就無法更改。
 @endcomponent
 
 @component('components.warning')
-Note that if you're using [Model Broadcasting](https://laravel.com/docs/10.x/broadcasting#model-broadcasting), you need to [prefix the event](https://laravel.com/docs/10.x/broadcasting#listening-for-model-broadcasts) with a '.' so that the right event is listened for, like <code>.MessageCreated</code>.
+請注意，如果您正在使用[模型廣播](https://laravel.com/docs/10.x/broadcasting#model-broadcasting)，您需要在事件前加上 '.' 以便正確監聽事件，例如 <code>.MessageCreated</code>。
 @endcomponent
 
 
-Now, Livewire will intercept the received event from Pusher, and act accordingly.
+現在，Livewire 將攔截來自 Pusher 的接收事件，並相應地執行。
 
-## Private & Presence Channels {#private-presence-channels}
+## 私人與存在頻道 {#private-presence-channels}
 
-In a similar way to regular public channels, you can also listen to events broadcasted to private and presence channels:
+與常規公共頻道類似，您還可以監聽廣播到私人和存在頻道的事件：
 
 @component('components.warning')
-    Make sure you have your <a href="https://laravel.com/docs/master/broadcasting#defining-authorization-callbacks">Authentication Callbacks</a> properly defined.
+    請確保您已正確定義您的<a href="https://laravel.com/docs/master/broadcasting#defining-authorization-callbacks">認證回調</a>。
 @endcomponent
 
 @component('components.code-component')
@@ -134,11 +135,9 @@ class OrderTracker extends Component
 @endslot
 @endcomponent
 
-This gives you the ability to react to a listen event on those channels with the `OrderShipped` event name. 
-You can also access the `joining | leaving | here` events of a presence channels with a slight change to the syntax.
+這使您能夠對這些頻道上的 listen 事件做出反應，並使用 `OrderShipped` 事件名稱。 您還可以通過稍微更改語法來訪問存在頻道的 `joining | leaving | here` 事件。
 
-@component('components.code-component')
-@slot('class')
+```php
 class OrderTracker extends Component
 {
     public $showNewOrderNotification = false;
@@ -171,5 +170,4 @@ class OrderTracker extends Component
         $this->showNewOrderNotification = true;
     }
 }
-@endslot
-@endcomponent
+```
